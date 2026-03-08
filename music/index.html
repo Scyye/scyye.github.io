@@ -1,77 +1,289 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
-    <title>Music</title>
+    <title>Scyye Music</title>
+
+    <style>
+        body{
+            margin:0;
+            font-family:system-ui;
+            background:#0f0f0f;
+            color:white;
+            overflow:hidden;
+        }
+
+        h1{
+            position:absolute;
+            top:20px;
+            width:100%;
+            text-align:center;
+            font-weight:300;
+            letter-spacing:3px;
+        }
+
+        #music-container{
+            position:absolute;
+            top:100px;
+            left:0;
+            right:0;
+            bottom:0;
+        }
+
+        .record{
+            width:140px;
+            height:140px;
+            border-radius:50%;
+            background:
+                    radial-gradient(circle at center,#222 0px,#222 35px,#111 36px,#111 100%);
+            position:absolute;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            cursor:grab;
+            user-select:none;
+            box-shadow:
+                    inset 0 0 8px rgba(255,255,255,.05),
+                    0 10px 20px rgba(0,0,0,.7);
+            transition: transform 0.2s;
+        }
+
+        .label{
+            width:55px;
+            height:55px;
+            border-radius:50%;
+            background:#d4af37;
+            color:black;
+            font-size:10px;
+            font-weight:bold;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            text-align:center;
+            padding:5px;
+        }
+
+        .spinning{
+            animation:spin 3s linear infinite;
+        }
+
+        @keyframes spin{
+            from{transform:rotate(0deg);}
+            to{transform:rotate(360deg);}
+        }
+
+        #turntable{
+            position:fixed;
+            bottom:40px;
+            right:40px;
+            width:200px;
+            height:200px;
+            border-radius:50%;
+            background:#222;
+            border:6px solid #444;
+            box-shadow:0 10px 30px rgba(0,0,0,.8);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            z-index:500;
+        }
+
+        #platter{
+            width:150px;
+            height:150px;
+            border-radius:50%;
+            background:
+                    radial-gradient(circle at center,#333 0px,#333 35px,#111 36px,#111 100%);
+            position:relative;
+            z-index:1;
+        }
+
+        /* tonearm container */
+        #arm-container{
+            position:fixed;
+            bottom:180px;
+            right:120px;
+            width:60px;
+            height:60px;
+            z-index:2000;
+            pointer-events:none;
+        }
+
+        #tonearm{
+            width:10px;
+            height:80px;
+            background:#999;
+            transform-origin:top left;
+            transform: rotate(-70deg);
+            position:absolute;
+            top:0;
+            left:20px;
+            transition: transform 1s ease-in-out;
+        }
+
+        .loader{
+            position:absolute;
+            top:50%;
+            width:100%;
+            text-align:center;
+            opacity:.6;
+        }
+    </style>
 </head>
 <body>
 
-<h1>Music</h1>
+<h1>My Music</h1>
 
-    <br></br>
+<div id="music-container">
+    <div class="loader">Loading music...</div>
+</div>
 
-<img src="../Assets/Scyye Edu Vol 1.png" alt="" height="64" width="64">
-<audio controls>
-  <source src="../Assets/Music/NoyZ.mp3" type="audio/mpeg">
-</audio>
-<br>
-NoyZ - Scyye
-<br><br><br>
+<div id="turntable">
+    <div id="platter"></div>
+</div>
 
-<h2>Scyye EDU Vol 2.</h2>
-    COMING February 2024
-<h2>Scyye EDU Vol 1.</h2>
+<div id="arm-container">
+    <div id="tonearm"></div>
+</div>
 
+<audio id="player"></audio>
 
+<script>
+    window.addEventListener("DOMContentLoaded", () => {
 
-<img src="../Assets/Scyye Edu Vol 1.png" alt="" height="64" width="64">
-<audio controls>
-  <source src="../Assets/Music/Coin.mp3" type="audio/mpeg">
-</audio>
-<br>
-Coin - Scyye
-<br><br><br>
-    
-<img src="../Assets/Scyye Edu Vol 1.png" alt="" height="64" width="64">
-<audio controls>
-  <source src="../Assets/Music/A new journey.mp3" type="audio/mpeg">
-</audio>
-<br>
-A New Journey - Scyye
-<br><br><br>
+        const username = "Scyye";
+        const repo = "scyye.github.io";
+        const folder = "Assets/Music";
 
-<img src="../Assets/Scyye Edu Vol 1.png" alt="" height="64" width="64">
-<audio controls>
-  <source src="../Assets/Music/Open Basket.mp3" type="audio/mpeg">
-</audio>
-<br>
-Open Basket - Scyye
-<br><br><br>
+        const api = `https://api.github.com/repos/${username}/${repo}/contents/${folder}`;
 
-<img src="../Assets/Scyye Edu Vol 1.png" alt="" height="64" width="64">
-<audio controls>
-  <source src="../Assets/Music/Dropper.mp3" type="audio/mpeg">
-</audio>
-<br>
-Dropper - Scyye
-<br><br><br>
+        const container = document.getElementById("music-container");
+        const player = document.getElementById("player");
+        const turntable = document.getElementById("turntable");
+        const tonearm = document.getElementById("tonearm");
 
-<img src="../Assets/Scyye Edu Vol 1.png" alt="" height="64" width="64">
-<audio controls>
-  <source src="../Assets/Music/Goldfish.mp3" type="audio/mpeg">
-</audio>
-<br>
-Goldfish - Scyye
-<br><br><br>
+        let currentRecord = null;
 
-<img src="../Assets/Scyye Edu Vol 1.png" alt="" height="64" width="64">
-<audio controls>
-  <source src="../Assets/Music/From The Void.mp3" type="audio/mpeg">
-</audio>
-<br>
-From The Void - Scyye
-<br><br><br>
+        function formatName(name){
+            return name.replace(".mp3","").replace(/[_-]/g," ").replace(/\b\w/g,l => l.toUpperCase());
+        }
 
-<h3>Created by <a href="https://scyye.github.io/">Scyye</a></h3>
+        async function loadMusic(){
+            if(!container){ console.error("music-container not found"); return; }
+
+            try{
+                const response = await fetch(api);
+                const files = await response.json();
+                container.innerHTML = "";
+
+                let x = 50; let y = 50;
+
+                files.filter(f => f.name.endsWith(".mp3")).forEach(file => {
+                    const record = document.createElement("div");
+                    record.className = "record";
+                    record.style.left = x + "px";
+                    record.style.top = y + "px";
+                    record.dataset.audio = file.download_url;
+                    record.dataset.onTable = "false";
+
+                    const label = document.createElement("div");
+                    label.className = "label";
+                    label.textContent = formatName(file.name);
+                    record.appendChild(label);
+
+                    makeDraggable(record);
+                    container.appendChild(record);
+
+                    x += 160; if(x > window.innerWidth - 200){ x = 50; y += 160;}
+                });
+
+            }catch(err){
+                console.error(err);
+                container.innerHTML = "<p>Failed to load music.</p>";
+            }
+        }
+
+        function makeDraggable(record){
+            let dragging = false;
+            let startX,startY,origX,origY;
+
+            record.addEventListener("pointerdown", e => {
+                dragging=true; startX=e.clientX; startY=e.clientY;
+                origX=parseFloat(record.style.left); origY=parseFloat(record.style.top);
+                record.style.cursor="grabbing";
+                record.style.zIndex=1000;
+                record.style.transition="none"; // disable transitions while dragging
+                record.setPointerCapture(e.pointerId);
+            });
+
+            record.addEventListener("pointermove", e=>{
+                if(!dragging) return;
+                const dx = e.clientX - startX;
+                const dy = e.clientY - startY;
+                record.style.left = (origX + dx) + "px";
+                record.style.top = (origY + dy) + "px";
+
+                if(record.dataset.onTable==="true" && !isOverTurntable(record)) stopRecord(record);
+            });
+
+            record.addEventListener("pointerup", e=>{
+                if(!dragging) return;
+                dragging=false; record.style.cursor="grab";
+                if(isOverTurntable(record)) animateArm(record);
+            });
+        }
+
+        function isOverTurntable(record){
+            const rect = record.getBoundingClientRect();
+            const table = turntable.getBoundingClientRect();
+            const cx = rect.left+rect.width/2, cy = rect.top+rect.height/2;
+            return cx>table.left && cx<table.right && cy>table.top && cy<table.bottom;
+        }
+
+        function animateArm(record){
+            const table = turntable.getBoundingClientRect();
+            const containerRect = container.getBoundingClientRect();
+            const targetX = table.left + table.width/2 - containerRect.left - record.offsetWidth/2;
+            const targetY = table.top + table.height/2 - containerRect.top - record.offsetHeight/2;
+
+            // animate record placement
+            record.style.transition="left 0.5s ease-in-out, top 0.5s ease-in-out";
+            record.style.left = targetX+"px";
+            record.style.top = targetY+"px";
+
+            // move tonearm toward record
+            tonearm.style.transform="rotate(-45deg)";
+
+            setTimeout(()=>{
+                record.dataset.onTable="true";
+                record.style.zIndex=2000;
+                playRecord(record);
+
+                // tonearm returns to original when dragging record off handled in stopRecord
+            }, 500);
+        }
+
+        function playRecord(record){
+            if(currentRecord && currentRecord!==record) stopRecord(currentRecord);
+            player.src=record.dataset.audio;
+            player.play();
+            record.classList.add("spinning");
+            currentRecord=record;
+        }
+
+        function stopRecord(record){
+            player.pause(); player.currentTime=0;
+            record.classList.remove("spinning");
+            record.dataset.onTable="false";
+            if(currentRecord===record) currentRecord=null;
+
+            // reverse tonearm animation
+            tonearm.style.transform="rotate(-70deg)";
+        }
+
+        loadMusic();
+
+    });
+</script>
 </body>
 </html>
