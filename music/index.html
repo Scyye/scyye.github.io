@@ -1,77 +1,130 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en_US">
 <head>
     <meta charset="UTF-8">
-    <title>Music</title>
+    <title>My Music</title>
+
+    <style>
+
+        body{
+            margin:0;
+            font-family:system-ui;
+            background:#0f0f0f;
+            color:white;
+            text-align:center;
+        }
+
+        h1{
+            margin-top:40px;
+            font-weight:300;
+            letter-spacing:2px;
+        }
+
+        #music-container{
+            display:grid;
+            grid-template-columns:repeat(auto-fill,260px);
+            gap:25px;
+            justify-content:center;
+            padding:40px;
+        }
+
+        .music-card{
+            background:#1b1b1b;
+            border-radius:14px;
+            padding:18px;
+            transition:all .25s;
+            box-shadow:0 10px 20px rgba(0,0,0,.4);
+        }
+
+        .music-card:hover{
+            transform:translateY(-6px);
+            box-shadow:0 20px 35px rgba(0,0,0,.6);
+        }
+
+        .song-title{
+            font-size:15px;
+            margin-bottom:10px;
+            opacity:.9;
+        }
+
+        audio{
+            width:100%;
+            margin-top:5px;
+        }
+
+        .loader{
+            margin-top:80px;
+            opacity:.7;
+        }
+
+    </style>
 </head>
+
 <body>
 
-<h1>Music</h1>
+<h1>My Music</h1>
 
-    <br></br>
+<div id="music-container">
+    <div class="loader">Loading music...</div>
+</div>
 
-<img src="../Assets/Scyye Edu Vol 1.png" alt="" height="64" width="64">
-<audio controls>
-  <source src="../Assets/Music/NoyZ.mp3" type="audio/mpeg">
-</audio>
-<br>
-NoyZ - Scyye
-<br><br><br>
+<script>
 
-<h2>Scyye EDU Vol 2.</h2>
-    COMING February 2024
-<h2>Scyye EDU Vol 1.</h2>
+    const username = "Scyye";
+    const repo = "scyye.github.io";
+    const folder = "Assets/Music";
 
+    const api = `https://api.github.com/repos/${username}/${repo}/contents/${folder}`;
 
+    async function loadMusic(){
 
-<img src="../Assets/Scyye Edu Vol 1.png" alt="" height="64" width="64">
-<audio controls>
-  <source src="../Assets/Music/Coin.mp3" type="audio/mpeg">
-</audio>
-<br>
-Coin - Scyye
-<br><br><br>
-    
-<img src="../Assets/Scyye Edu Vol 1.png" alt="" height="64" width="64">
-<audio controls>
-  <source src="../Assets/Music/A new journey.mp3" type="audio/mpeg">
-</audio>
-<br>
-A New Journey - Scyye
-<br><br><br>
+        const container = document.getElementById("music-container");
 
-<img src="../Assets/Scyye Edu Vol 1.png" alt="" height="64" width="64">
-<audio controls>
-  <source src="../Assets/Music/Open Basket.mp3" type="audio/mpeg">
-</audio>
-<br>
-Open Basket - Scyye
-<br><br><br>
+        try{
 
-<img src="../Assets/Scyye Edu Vol 1.png" alt="" height="64" width="64">
-<audio controls>
-  <source src="../Assets/Music/Dropper.mp3" type="audio/mpeg">
-</audio>
-<br>
-Dropper - Scyye
-<br><br><br>
+            const response = await fetch(api);
+            const files = await response.json();
 
-<img src="../Assets/Scyye Edu Vol 1.png" alt="" height="64" width="64">
-<audio controls>
-  <source src="../Assets/Music/Goldfish.mp3" type="audio/mpeg">
-</audio>
-<br>
-Goldfish - Scyye
-<br><br><br>
+            container.innerHTML = "";
 
-<img src="../Assets/Scyye Edu Vol 1.png" alt="" height="64" width="64">
-<audio controls>
-  <source src="../Assets/Music/From The Void.mp3" type="audio/mpeg">
-</audio>
-<br>
-From The Void - Scyye
-<br><br><br>
+            files
+                .filter(file => file.name.endsWith(".mp3"))
+                .forEach(file => {
 
-<h3>Created by <a href="https://scyye.github.io/">Scyye</a></h3>
+                    const card = document.createElement("div");
+                    card.className = "music-card";
+
+                    const title = document.createElement("div");
+                    title.className = "song-title";
+                    title.textContent = file.name.replace(".mp3","");
+
+                    const player = document.createElement("audio");
+                    player.controls = true;
+                    player.src = file.download_url;
+
+                    card.appendChild(title);
+                    card.appendChild(player);
+
+                    container.appendChild(card);
+
+                });
+
+            if(container.innerHTML === "")
+                container.innerHTML = "<p>No songs found.</p>";
+
+        }
+        catch(e){
+
+            container.innerHTML = "<p>Failed to load music.</p>";
+            console.error(e);
+
+        }
+
+    }
+
+    loadMusic();
+
+</script>
+
 </body>
 </html>
