@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en_US">
+<html>
 <head>
     <meta charset="UTF-8">
-    <title>My Music</title>
+    <title>Scyye Music</title>
 
     <style>
 
@@ -17,44 +17,73 @@
         h1{
             margin-top:40px;
             font-weight:300;
-            letter-spacing:2px;
+            letter-spacing:3px;
         }
+
+        /* grid */
 
         #music-container{
             display:grid;
-            grid-template-columns:repeat(auto-fill,260px);
-            gap:25px;
+            grid-template-columns:repeat(auto-fill,200px);
+            gap:40px;
             justify-content:center;
-            padding:40px;
+            padding:60px;
         }
 
-        .music-card{
-            background:#1b1b1b;
-            border-radius:14px;
-            padding:18px;
-            transition:all .25s;
-            box-shadow:0 10px 20px rgba(0,0,0,.4);
+        /* vinyl record */
+
+        .record{
+            width:180px;
+            height:180px;
+            border-radius:50%;
+            background:
+                    radial-gradient(circle at center,#222 45px,#111 45px, #111 55px, #222 55px, #222 65px, #111 65px, #111 75px, #222 75px);
+            box-shadow:
+                    inset 0 0 8px rgba(255,255,255,.05),
+                    0 10px 20px rgba(0,0,0,.6);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            cursor:pointer;
+            transition:.25s;
+            position:relative;
         }
 
-        .music-card:hover{
-            transform:translateY(-6px);
-            box-shadow:0 20px 35px rgba(0,0,0,.6);
+        .record:hover{
+            transform:scale(1.05);
         }
 
-        .song-title{
-            font-size:15px;
-            margin-bottom:10px;
-            opacity:.9;
+        /* center label */
+
+        .label{
+            width:75px;
+            height:75px;
+            border-radius:50%;
+            background:#d4af37;
+            color:black;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            text-align:center;
+            font-size:11px;
+            padding:8px;
+            font-weight:bold;
         }
 
-        audio{
-            width:100%;
-            margin-top:5px;
+        /* spinning animation */
+
+        .spinning{
+            animation:spin 3s linear infinite;
+        }
+
+        @keyframes spin{
+            from{transform:rotate(0deg);}
+            to{transform:rotate(360deg);}
         }
 
         .loader{
             margin-top:80px;
-            opacity:.7;
+            opacity:.6;
         }
 
     </style>
@@ -68,13 +97,32 @@
     <div class="loader">Loading music...</div>
 </div>
 
+<audio id="player"></audio>
+
 <script>
+
+    /* repo info */
 
     const username = "Scyye";
     const repo = "scyye.github.io";
     const folder = "Assets/Music";
 
     const api = `https://api.github.com/repos/${username}/${repo}/contents/${folder}`;
+
+    const player = document.getElementById("player");
+
+    let currentRecord = null;
+
+    /* make filenames pretty */
+
+    function formatName(name){
+
+        return name
+            .replace(".mp3","")
+            .replace(/[_-]/g," ")
+            .replace(/\b\w/g,l => l.toUpperCase());
+
+    }
 
     async function loadMusic(){
 
@@ -91,21 +139,40 @@
                 .filter(file => file.name.endsWith(".mp3"))
                 .forEach(file => {
 
-                    const card = document.createElement("div");
-                    card.className = "music-card";
+                    const songName = formatName(file.name);
 
-                    const title = document.createElement("div");
-                    title.className = "song-title";
-                    title.textContent = file.name.replace(".mp3","");
+                    const record = document.createElement("div");
+                    record.className = "record";
 
-                    const player = document.createElement("audio");
-                    player.controls = true;
-                    player.src = file.download_url;
+                    const label = document.createElement("div");
+                    label.className = "label";
+                    label.textContent = songName;
 
-                    card.appendChild(title);
-                    card.appendChild(player);
+                    record.appendChild(label);
 
-                    container.appendChild(card);
+                    record.onclick = () => {
+
+                        if(player.src === file.download_url && !player.paused){
+
+                            player.pause();
+                            record.classList.remove("spinning");
+                            currentRecord = null;
+                            return;
+
+                        }
+
+                        if(currentRecord)
+                            currentRecord.classList.remove("spinning");
+
+                        player.src = file.download_url;
+                        player.play();
+
+                        record.classList.add("spinning");
+                        currentRecord = record;
+
+                    };
+
+                    container.appendChild(record);
 
                 });
 
@@ -113,10 +180,10 @@
                 container.innerHTML = "<p>No songs found.</p>";
 
         }
-        catch(e){
+        catch(err){
 
             container.innerHTML = "<p>Failed to load music.</p>";
-            console.error(e);
+            console.error(err);
 
         }
 
