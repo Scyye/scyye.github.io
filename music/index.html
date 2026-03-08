@@ -11,66 +11,66 @@
             font-family:system-ui;
             background:#0f0f0f;
             color:white;
-            text-align:center;
+            overflow:hidden;
         }
 
         h1{
-            margin-top:40px;
+            position:absolute;
+            top:20px;
+            width:100%;
+            text-align:center;
             font-weight:300;
             letter-spacing:3px;
         }
 
-        /* grid */
+        /* music area */
 
         #music-container{
-            display:grid;
-            grid-template-columns:repeat(auto-fill,200px);
-            gap:40px;
-            justify-content:center;
-            padding:60px;
+            position:absolute;
+            top:100px;
+            left:0;
+            right:0;
+            bottom:0;
         }
 
-        /* vinyl record */
+        /* draggable record */
 
         .record{
-            width:180px;
-            height:180px;
+            width:140px;
+            height:140px;
             border-radius:50%;
             background:
-                    radial-gradient(circle at center,#222 45px,#111 45px, #111 55px, #222 55px, #222 65px, #111 65px, #111 75px, #222 75px);
-            box-shadow:
-                    inset 0 0 8px rgba(255,255,255,.05),
-                    0 10px 20px rgba(0,0,0,.6);
+                    radial-gradient(circle at center,#222 0px,#222 35px,#111 36px,#111 100%);
+            position:absolute;
             display:flex;
             align-items:center;
             justify-content:center;
-            cursor:pointer;
-            transition:.25s;
-            position:relative;
+            cursor:grab;
+            user-select:none;
+            box-shadow:
+                    inset 0 0 8px rgba(255,255,255,.05),
+                    0 10px 20px rgba(0,0,0,.7);
+            transition: transform 0.15s;
         }
 
-        .record:hover{
-            transform:scale(1.05);
-        }
-
-        /* center label */
+        /* label */
 
         .label{
-            width:75px;
-            height:75px;
+            width:55px;
+            height:55px;
             border-radius:50%;
             background:#d4af37;
             color:black;
+            font-size:10px;
+            font-weight:bold;
             display:flex;
             align-items:center;
             justify-content:center;
             text-align:center;
-            font-size:11px;
-            padding:8px;
-            font-weight:bold;
+            padding:5px;
         }
 
-        /* spinning animation */
+        /* spinning */
 
         .spinning{
             animation:spin 3s linear infinite;
@@ -81,8 +81,39 @@
             to{transform:rotate(360deg);}
         }
 
+        /* turntable */
+
+        #turntable{
+            position:fixed;
+            bottom:40px;
+            right:40px;
+            width:200px;
+            height:200px;
+            border-radius:50%;
+            background:#222;
+            border:6px solid #444;
+            box-shadow:0 10px 30px rgba(0,0,0,.8);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            z-index:500;
+        }
+
+        /* platter */
+
+        #platter{
+            width:150px;
+            height:150px;
+            border-radius:50%;
+            background:
+                    radial-gradient(circle at center,#333 0px,#333 35px,#111 36px,#111 100%);
+        }
+
         .loader{
-            margin-top:80px;
+            position:absolute;
+            top:50%;
+            width:100%;
+            text-align:center;
             opacity:.6;
         }
 
@@ -97,99 +128,184 @@
     <div class="loader">Loading music...</div>
 </div>
 
+<div id="turntable">
+    <div id="platter"></div>
+</div>
+
 <audio id="player"></audio>
 
 <script>
 
-    /* repo info */
+    window.addEventListener("DOMContentLoaded", () => {
 
-    const username = "Scyye";
-    const repo = "scyye.github.io";
-    const folder = "Assets/Music";
+        const username = "Scyye";
+        const repo = "scyye.github.io";
+        const folder = "Assets/Music";
 
-    const api = `https://api.github.com/repos/${username}/${repo}/contents/${folder}`;
-
-    const player = document.getElementById("player");
-
-    let currentRecord = null;
-
-    /* make filenames pretty */
-
-    function formatName(name){
-
-        return name
-            .replace(".mp3","")
-            .replace(/[_-]/g," ")
-            .replace(/\b\w/g,l => l.toUpperCase());
-
-    }
-
-    async function loadMusic(){
+        const api = `https://api.github.com/repos/${username}/${repo}/contents/${folder}`;
 
         const container = document.getElementById("music-container");
+        const player = document.getElementById("player");
+        const turntable = document.getElementById("turntable");
 
-        try{
+        let currentRecord = null;
 
-            const response = await fetch(api);
-            const files = await response.json();
+        function formatName(name){
+            return name
+                .replace(".mp3","")
+                .replace(/[_-]/g," ")
+                .replace(/\b\w/g,l => l.toUpperCase());
+        }
 
-            container.innerHTML = "";
+        async function loadMusic(){
 
-            files
-                .filter(file => file.name.endsWith(".mp3"))
-                .forEach(file => {
+            if(!container){
+                console.error("music-container not found");
+                return;
+            }
 
-                    const songName = formatName(file.name);
+            try{
+                const response = await fetch(api);
+                const files = await response.json();
 
-                    const record = document.createElement("div");
-                    record.className = "record";
+                container.innerHTML = "";
 
-                    const label = document.createElement("div");
-                    label.className = "label";
-                    label.textContent = songName;
+                let x = 50;
+                let y = 50;
 
-                    record.appendChild(label);
+                files
+                    .filter(file => file.name.endsWith(".mp3"))
+                    .forEach(file => {
 
-                    record.onclick = () => {
+                        const record = document.createElement("div");
+                        record.className = "record";
+                        record.style.left = x + "px";
+                        record.style.top = y + "px";
+                        record.dataset.audio = file.download_url;
+                        record.dataset.onTable = "false";
 
-                        if(player.src === file.download_url && !player.paused){
+                        const label = document.createElement("div");
+                        label.className = "label";
+                        label.textContent = formatName(file.name);
 
-                            player.pause();
-                            record.classList.remove("spinning");
-                            currentRecord = null;
-                            return;
+                        record.appendChild(label);
 
+                        makeDraggable(record);
+
+                        container.appendChild(record);
+
+                        x += 160;
+                        if(x > window.innerWidth - 200){
+                            x = 50;
+                            y += 160;
                         }
+                    });
 
-                        if(currentRecord)
-                            currentRecord.classList.remove("spinning");
-
-                        player.src = file.download_url;
-                        player.play();
-
-                        record.classList.add("spinning");
-                        currentRecord = record;
-
-                    };
-
-                    container.appendChild(record);
-
-                });
-
-            if(container.innerHTML === "")
-                container.innerHTML = "<p>No songs found.</p>";
-
-        }
-        catch(err){
-
-            container.innerHTML = "<p>Failed to load music.</p>";
-            console.error(err);
+            }catch(err){
+                console.error(err);
+                container.innerHTML = "<p>Failed to load music.</p>";
+            }
 
         }
 
-    }
+        function makeDraggable(record){
+            let dragging = false;
+            let startX, startY;
+            let origX, origY;
 
-    loadMusic();
+            record.addEventListener("pointerdown", e => {
+                dragging = true;
+                startX = e.clientX;
+                startY = e.clientY;
+                origX = parseFloat(record.style.left);
+                origY = parseFloat(record.style.top);
+
+                record.style.cursor = "grabbing";
+                record.style.zIndex = 1000;
+
+                record.setPointerCapture(e.pointerId);
+            });
+
+            record.addEventListener("pointermove", e => {
+                if(!dragging) return;
+
+                let dx = e.clientX - startX;
+                let dy = e.clientY - startY;
+
+                record.style.left = (origX + dx) + "px";
+                record.style.top = (origY + dy) + "px";
+
+                if(record.dataset.onTable === "true" && !isOverTurntable(record)){
+                    stopRecord(record);
+                }
+            });
+
+            record.addEventListener("pointerup", e => {
+                if(!dragging) return;
+                dragging = false;
+                record.style.cursor = "grab";
+
+                if(isOverTurntable(record)){
+                    placeOnTurntable(record);
+                }
+            });
+        }
+
+        function isOverTurntable(record){
+            const rect = record.getBoundingClientRect();
+            const table = turntable.getBoundingClientRect();
+            const centerX = rect.left + rect.width/2;
+            const centerY = rect.top + rect.height/2;
+
+            return (centerX > table.left &&
+                centerX < table.right &&
+                centerY > table.top &&
+                centerY < table.bottom);
+        }
+
+        function placeOnTurntable(record){
+            const table = turntable.getBoundingClientRect();
+            const containerRect = container.getBoundingClientRect();
+
+            // center in container coordinates
+            const centerX = table.left + table.width/2 - containerRect.left - record.offsetWidth/2;
+            const centerY = table.top + table.height/2 - containerRect.top - record.offsetHeight/2;
+
+            record.style.left = centerX + "px";
+            record.style.top = centerY + "px";
+
+            record.style.zIndex = 2000;
+            record.dataset.onTable = "true";
+
+            playRecord(record);
+        }
+
+        function playRecord(record){
+            if(currentRecord && currentRecord !== record)
+                stopRecord(currentRecord);
+
+            player.src = record.dataset.audio;
+            player.play();
+
+            record.classList.add("spinning");
+
+            currentRecord = record;
+        }
+
+        function stopRecord(record){
+            player.pause();
+            player.currentTime = 0;
+
+            record.classList.remove("spinning");
+            record.dataset.onTable = "false";
+
+            if(currentRecord === record)
+                currentRecord = null;
+        }
+
+        loadMusic();
+
+    });
 
 </script>
 
