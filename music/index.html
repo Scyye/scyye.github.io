@@ -5,7 +5,6 @@
     <title>Scyye Music</title>
 
     <style>
-
         body{
             margin:0;
             font-family:system-ui;
@@ -23,8 +22,6 @@
             letter-spacing:3px;
         }
 
-        /* music area */
-
         #music-container{
             position:absolute;
             top:100px;
@@ -32,8 +29,6 @@
             right:0;
             bottom:0;
         }
-
-        /* draggable record */
 
         .record{
             width:140px;
@@ -50,10 +45,8 @@
             box-shadow:
                     inset 0 0 8px rgba(255,255,255,.05),
                     0 10px 20px rgba(0,0,0,.7);
-            transition: transform 0.15s;
+            transition: transform 0.2s;
         }
-
-        /* label */
 
         .label{
             width:55px;
@@ -70,8 +63,6 @@
             padding:5px;
         }
 
-        /* spinning */
-
         .spinning{
             animation:spin 3s linear infinite;
         }
@@ -80,8 +71,6 @@
             from{transform:rotate(0deg);}
             to{transform:rotate(360deg);}
         }
-
-        /* turntable */
 
         #turntable{
             position:fixed;
@@ -99,14 +88,37 @@
             z-index:500;
         }
 
-        /* platter */
-
         #platter{
             width:150px;
             height:150px;
             border-radius:50%;
             background:
                     radial-gradient(circle at center,#333 0px,#333 35px,#111 36px,#111 100%);
+            position:relative;
+            z-index:1;
+        }
+
+        /* tonearm container */
+        #arm-container{
+            position:fixed;
+            bottom:180px;
+            right:120px;
+            width:60px;
+            height:60px;
+            z-index:2000;
+            pointer-events:none;
+        }
+
+        #tonearm{
+            width:10px;
+            height:80px;
+            background:#999;
+            transform-origin:top left;
+            transform: rotate(-70deg);
+            position:absolute;
+            top:0;
+            left:20px;
+            transition: transform 1s ease-in-out;
         }
 
         .loader{
@@ -116,10 +128,8 @@
             text-align:center;
             opacity:.6;
         }
-
     </style>
 </head>
-
 <body>
 
 <h1>My Music</h1>
@@ -132,10 +142,13 @@
     <div id="platter"></div>
 </div>
 
+<div id="arm-container">
+    <div id="tonearm"></div>
+</div>
+
 <audio id="player"></audio>
 
 <script>
-
     window.addEventListener("DOMContentLoaded", () => {
 
         const username = "Scyye";
@@ -147,167 +160,130 @@
         const container = document.getElementById("music-container");
         const player = document.getElementById("player");
         const turntable = document.getElementById("turntable");
+        const tonearm = document.getElementById("tonearm");
 
         let currentRecord = null;
 
         function formatName(name){
-            return name
-                .replace(".mp3","")
-                .replace(/[_-]/g," ")
-                .replace(/\b\w/g,l => l.toUpperCase());
+            return name.replace(".mp3","").replace(/[_-]/g," ").replace(/\b\w/g,l => l.toUpperCase());
         }
 
         async function loadMusic(){
-
-            if(!container){
-                console.error("music-container not found");
-                return;
-            }
+            if(!container){ console.error("music-container not found"); return; }
 
             try{
                 const response = await fetch(api);
                 const files = await response.json();
-
                 container.innerHTML = "";
 
-                let x = 50;
-                let y = 50;
+                let x = 50; let y = 50;
 
-                files
-                    .filter(file => file.name.endsWith(".mp3"))
-                    .forEach(file => {
+                files.filter(f => f.name.endsWith(".mp3")).forEach(file => {
+                    const record = document.createElement("div");
+                    record.className = "record";
+                    record.style.left = x + "px";
+                    record.style.top = y + "px";
+                    record.dataset.audio = file.download_url;
+                    record.dataset.onTable = "false";
 
-                        const record = document.createElement("div");
-                        record.className = "record";
-                        record.style.left = x + "px";
-                        record.style.top = y + "px";
-                        record.dataset.audio = file.download_url;
-                        record.dataset.onTable = "false";
+                    const label = document.createElement("div");
+                    label.className = "label";
+                    label.textContent = formatName(file.name);
+                    record.appendChild(label);
 
-                        const label = document.createElement("div");
-                        label.className = "label";
-                        label.textContent = formatName(file.name);
+                    makeDraggable(record);
+                    container.appendChild(record);
 
-                        record.appendChild(label);
-
-                        makeDraggable(record);
-
-                        container.appendChild(record);
-
-                        x += 160;
-                        if(x > window.innerWidth - 200){
-                            x = 50;
-                            y += 160;
-                        }
-                    });
+                    x += 160; if(x > window.innerWidth - 200){ x = 50; y += 160;}
+                });
 
             }catch(err){
                 console.error(err);
                 container.innerHTML = "<p>Failed to load music.</p>";
             }
-
         }
 
         function makeDraggable(record){
             let dragging = false;
-            let startX, startY;
-            let origX, origY;
+            let startX,startY,origX,origY;
 
             record.addEventListener("pointerdown", e => {
-                dragging = true;
-                startX = e.clientX;
-                startY = e.clientY;
-                origX = parseFloat(record.style.left);
-                origY = parseFloat(record.style.top);
-
-                record.style.cursor = "grabbing";
-                record.style.zIndex = 1000;
-
+                dragging=true; startX=e.clientX; startY=e.clientY;
+                origX=parseFloat(record.style.left); origY=parseFloat(record.style.top);
+                record.style.cursor="grabbing";
+                record.style.zIndex=1000;
+                record.style.transition="none"; // disable transitions while dragging
                 record.setPointerCapture(e.pointerId);
             });
 
-            record.addEventListener("pointermove", e => {
+            record.addEventListener("pointermove", e=>{
                 if(!dragging) return;
-
-                let dx = e.clientX - startX;
-                let dy = e.clientY - startY;
-
+                const dx = e.clientX - startX;
+                const dy = e.clientY - startY;
                 record.style.left = (origX + dx) + "px";
                 record.style.top = (origY + dy) + "px";
 
-                if(record.dataset.onTable === "true" && !isOverTurntable(record)){
-                    stopRecord(record);
-                }
+                if(record.dataset.onTable==="true" && !isOverTurntable(record)) stopRecord(record);
             });
 
-            record.addEventListener("pointerup", e => {
+            record.addEventListener("pointerup", e=>{
                 if(!dragging) return;
-                dragging = false;
-                record.style.cursor = "grab";
-
-                if(isOverTurntable(record)){
-                    placeOnTurntable(record);
-                }
+                dragging=false; record.style.cursor="grab";
+                if(isOverTurntable(record)) animateArm(record);
             });
         }
 
         function isOverTurntable(record){
             const rect = record.getBoundingClientRect();
             const table = turntable.getBoundingClientRect();
-            const centerX = rect.left + rect.width/2;
-            const centerY = rect.top + rect.height/2;
-
-            return (centerX > table.left &&
-                centerX < table.right &&
-                centerY > table.top &&
-                centerY < table.bottom);
+            const cx = rect.left+rect.width/2, cy = rect.top+rect.height/2;
+            return cx>table.left && cx<table.right && cy>table.top && cy<table.bottom;
         }
 
-        function placeOnTurntable(record){
+        function animateArm(record){
             const table = turntable.getBoundingClientRect();
             const containerRect = container.getBoundingClientRect();
+            const targetX = table.left + table.width/2 - containerRect.left - record.offsetWidth/2;
+            const targetY = table.top + table.height/2 - containerRect.top - record.offsetHeight/2;
 
-            // center in container coordinates
-            const centerX = table.left + table.width/2 - containerRect.left - record.offsetWidth/2;
-            const centerY = table.top + table.height/2 - containerRect.top - record.offsetHeight/2;
+            // animate record placement
+            record.style.transition="left 0.5s ease-in-out, top 0.5s ease-in-out";
+            record.style.left = targetX+"px";
+            record.style.top = targetY+"px";
 
-            record.style.left = centerX + "px";
-            record.style.top = centerY + "px";
+            // move tonearm toward record
+            tonearm.style.transform="rotate(-45deg)";
 
-            record.style.zIndex = 2000;
-            record.dataset.onTable = "true";
+            setTimeout(()=>{
+                record.dataset.onTable="true";
+                record.style.zIndex=2000;
+                playRecord(record);
 
-            playRecord(record);
+                // tonearm returns to original when dragging record off handled in stopRecord
+            }, 500);
         }
 
         function playRecord(record){
-            if(currentRecord && currentRecord !== record)
-                stopRecord(currentRecord);
-
-            player.src = record.dataset.audio;
+            if(currentRecord && currentRecord!==record) stopRecord(currentRecord);
+            player.src=record.dataset.audio;
             player.play();
-
             record.classList.add("spinning");
-
-            currentRecord = record;
+            currentRecord=record;
         }
 
         function stopRecord(record){
-            player.pause();
-            player.currentTime = 0;
-
+            player.pause(); player.currentTime=0;
             record.classList.remove("spinning");
-            record.dataset.onTable = "false";
+            record.dataset.onTable="false";
+            if(currentRecord===record) currentRecord=null;
 
-            if(currentRecord === record)
-                currentRecord = null;
+            // reverse tonearm animation
+            tonearm.style.transform="rotate(-70deg)";
         }
 
         loadMusic();
 
     });
-
 </script>
-
 </body>
 </html>
