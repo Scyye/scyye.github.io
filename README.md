@@ -1,9 +1,11 @@
 # Scyye
-You can access the site [here](https://scyye.github.io)
+You can access the site [here](https://scyye.dev)
 
 # Contact
-If for whatever reason you need to contact me, there are plenty of ways.
+If you need to contact me, there are plenty of methods.
 
-1: Email me (scyyebiz@gmail.com or for urgent smazz020509@gmail.com)
+1: Email me salm@scyye.dev or for urgent contact@scyye.dev 
 
-2: Contact me through discord (@scyye)
+2: Contact me through Discord (@scyye)
+
+3: Join my [Discord Server](https://scyye.dev/discord)
