@@ -42,7 +42,7 @@ TSStats is designed to minimize user identification:
 - Uses one-way encryption to anonymize user info
 - Accesses only mods.yml
 
-See [`PRIVACY.md`](https://scyye.dev/ts/PRIVACY.md) for full details.
+See [`PRIVACY.md`](https://scyye.dev/ts/PRIVACY) for full details.
 
 ## Installation
 
