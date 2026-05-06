@@ -1,0 +1,65 @@
+<h1 id="tsstats">TSStats</h1>
+<p>TSStats is a lightweight metrics mod that collects anonymous metric data about users&#39; mods and games played on the Thunderstore mod platform.</p>
+<h2 id="why-tsstats-exists">Why TSStats Exists</h2>
+<p>Thunderstore does provide metrics, but they are often highly inaccurate. Eventually, hopefully, this mod will fix that issue, with a &quot;spam-proof&quot;(mostly) API</p>
+<h2 id="features">Features</h2>
+<ul>
+<li>Tracks mod usage, rather than just installations  </li>
+<li>Aggregates users&#39; mods </li>
+<li>Publish dashboard  </li>
+<li>Minimal performance impact </li>
+<li>Full compatibility with other BepInEx plugins (non-invasive) </li>
+<li>Privacy-focused data collection  </li>
+</ul>
+<h2 id="how-it-works">How It Works</h2>
+<p>TSStats runs inside your game and sends data specifically from the mods.yml file located in your profile folder.</p>
+<p>Collected data includes:</p>
+<ul>
+<li>Mods and versions  </li>
+<li>Authors</li>
+<li>Games    </li>
+</ul>
+<h2 id="dashboard">Dashboard</h2>
+<p>View statistics at:<br><a href="https://ts.scyye.dev/api/view">https://ts.scyye.dev/api/view</a></p>
+<p>Includes:</p>
+<ul>
+<li>Top mods  </li>
+<li>Top authors  </li>
+<li>Per-game players</li>
+<li>Per-game authors </li>
+</ul>
+<h2 id="privacy">Privacy</h2>
+<p>TSStats is designed to minimize user identification:</p>
+<ul>
+<li>Uses one-way encryption to anonymize user info</li>
+<li>Accesses only mods.yml</li>
+</ul>
+<p>See <a href="https://scyye.dev/ts/PRIVACY.md"><code>PRIVACY.md</code></a> for full details.</p>
+<h2 id="installation">Installation</h2>
+<p>TSStats is distributed via the Thunderstore database. It is only intended to be used with mod managers based on Thunderstore. </p>
+<p><a href="https://github.com/ebkr/r2modmanPlus">R2ModMan</a> Confirmed Functional;</p>
+<p><a href="https://www.overwolf.com/app/thunderstore-thunderstore_mod_manager">Thunderstore</a> Confirmed Functional;</p>
+<p><a href="https://github.com/Kesomannen/gale">Gale</a> Untested, if you use this please message @scyye on discord with info</p>
+<ul>
+<li>Install through Thunderstore  </li>
+<li>Launch the game through your mod manager  </li>
+<li>No configuration required  </li>
+</ul>
+<p>We do not support manual installation.</p>
+<h2 id="compatibility">Compatibility</h2>
+<ul>
+<li>Full compatibility with all other mods</li>
+<li>Based on mono bepinex (might work with ML. IL2CPP version coming soon:tm:)</li>
+</ul>
+<h2 id="development-status">Development Status</h2>
+<p>TSStats is actively evolving. Planned improvements include:</p>
+<ul>
+<li>Nicer-looking website</li>
+<li>Cross-session storage</li>
+<li>Easier opt out (See below for data removal details)</li>
+</ul>
+<h2 id="contributing">Contributing</h2>
+<p>Feedback, ideas, and contributions are welcome.<br>Open an issue or submit a pull request.</p>
+<h2 id="disclaimer">Disclaimer</h2>
+<p>This mod is intended for aggregate analytics only.</p>
+<p>It should not be used to identify, track, or profile individual users.</p>
