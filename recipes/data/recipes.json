@@ -1,0 +1,14 @@
+[
+  {
+    "id": "pancakes",
+    "title": "Classic Pancakes",
+    "image": "images/pancakes.jpg",
+    "description": "Fluffy homemade pancakes."
+  },
+  {
+    "id": "cookies",
+    "title": "Chocolate Chip Cookies",
+    "image": "images/cookies.jpg",
+    "description": "Soft and chewy cookies."
+  }
+]

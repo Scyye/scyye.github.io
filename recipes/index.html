@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Recipes</title>
+
+<style>
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background: #f5f5f5;
+    color: #222;
+}
+
+h1, h2, h3 {
+    margin-top: 0;
+}
+
+#app {
+    max-width: 900px;
+    margin: auto;
+}
+
+.recipe-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.recipe-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    cursor: pointer;
+    transition: 0.2s;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.recipe-card:hover {
+    transform: translateY(-2px);
+}
+
+.recipe-meta {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+.back-button {
+    margin-bottom: 20px;
+    cursor: pointer;
+    display: inline-block;
+    color: #0066cc;
+}
+
+.ingredients li,
+.instructions li {
+    margin-bottom: 10px;
+}
+
+.tag {
+    display: inline-block;
+    background: #eee;
+    padding: 4px 10px;
+    border-radius: 999px;
+    margin-right: 5px;
+    margin-top: 5px;
+    font-size: 12px;
+}
+
+</style>
+</head>
+<body>
+
+<div id="app">
+    Loading...
+</div>
+
+<script>
+
+const app = document.getElementById("app");
+
+async function fetchJSON(path) {
+    const response = await fetch(path);
+
+    if (!response.ok) {
+        throw new Error("Failed to load " + path);
+    }
+
+    return await response.json();
+}
+
+function navigateToRecipe(id) {
+    location.hash = "recipe=" + id;
+}
+
+function goHome() {
+    location.hash = "";
+}
+
+async function renderHome() {
+
+    const recipes = await fetchJSON("./data/recipes.json");
+
+    app.innerHTML = `
+        <h1>Recipes</h1>
+
+        <div class="recipe-list">
+            ${recipes.map(recipe => `
+                <div class="recipe-card"
+                     onclick="navigateToRecipe('${recipe.id}')">
+
+                    <h2>${recipe.title}</h2>
+
+                    <p>${recipe.description || ""}</p>
+
+                    <div class="recipe-meta">
+                        ${recipe.prepTime || "Unknown prep"} •
+                        ${recipe.cookTime || "Unknown cook"}
+                    </div>
+
+                    ${(recipe.tags || []).map(tag =>
+                        `<span class="tag">${tag}</span>`
+                    ).join("")}
+                </div>
+            `).join("")}
+        </div>
+    `;
+}
+
+async function renderRecipe(id) {
+
+    try {
+
+        const recipe = await fetchJSON(
+            `./data/recipes/${id}.json`
+        );
+
+        app.innerHTML = `
+            <div class="back-button"
+                 onclick="goHome()">
+                 ← Back
+            </div>
+
+            <h1>${recipe.title}</h1>
+
+            <p>${recipe.description || ""}</p>
+
+            <div class="recipe-meta">
+                Prep: ${recipe.prepTime || "?"}
+                <br>
+                Cook: ${recipe.cookTime || "?"}
+                <br>
+                Servings: ${recipe.servings || "?"}
+            </div>
+
+            <h2>Ingredients</h2>
+
+            <ul class="ingredients">
+                ${(recipe.ingredients || []).map(i =>
+                    `<li>${i}</li>`
+                ).join("")}
+            </ul>
+
+            <h2>Instructions</h2>
+
+            <ol class="instructions">
+                ${(recipe.instructions || []).map(i =>
+                    `<li>${i}</li>`
+                ).join("")}
+            </ol>
+
+            ${
+                recipe.tags?.length
+                ? `
+                    <h3>Tags</h3>
+
+                    ${recipe.tags.map(tag =>
+                        `<span class="tag">${tag}</span>`
+                    ).join("")}
+                  `
+                : ""
+            }
+        `;
+
+    } catch (err) {
+
+        app.innerHTML = `
+            <h1>Recipe Not Found</h1>
+
+            <p>${err.message}</p>
+
+            <div class="back-button"
+                 onclick="goHome()">
+                 ← Back
+            </div>
+        `;
+    }
+}
+
+async function router() {
+
+    const hash = location.hash;
+
+    if (hash.startsWith("#recipe=")) {
+
+        const id = hash.replace("#recipe=", "");
+
+        await renderRecipe(id);
+
+    } else {
+
+        await renderHome();
+    }
+}
+
+window.addEventListener("hashchange", router);
+
+router();
+
+</script>
+
+</body>
+</html>

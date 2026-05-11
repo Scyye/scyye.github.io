@@ -1,0 +1,31 @@
+{
+  "id": "pancakes",
+  "title": "Classic Pancakes",
+
+  "description": "Fluffy homemade pancakes.",
+
+  "image": "images/pancakes.jpg",
+
+  "servings": 4,
+
+  "prepTime": "10 mins",
+  "cookTime": "15 mins",
+  "totalTime": "25 mins",
+
+  "ingredients": [
+    "1 1/2 cups flour",
+    "1 egg",
+    "1 1/4 cups milk"
+  ],
+
+  "instructions": [
+    "Mix ingredients.",
+    "Heat pan.",
+    "Cook pancakes."
+  ],
+
+  "tags": [
+    "breakfast",
+    "easy"
+  ]
+}
