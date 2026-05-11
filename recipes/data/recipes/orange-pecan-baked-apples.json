@@ -1,0 +1,50 @@
+{
+  "id": "orange-pecan-baked-apples",
+  "name": "Orange Pecan Baked Apples",
+  "description": "Whole baked apples filled with a sweet orange marmalade and pecan mixture, finished with warm spices.",
+  "yield": {
+    "amount": 6,
+    "unit": "servings"
+  },
+  "ingredients": [
+    {
+      "item": "baking apples",
+      "quantity": 6,
+      "unit": "medium"
+    },
+    {
+      "item": "orange marmalade",
+      "quantity": 0.25,
+      "unit": "cup"
+    },
+    {
+      "item": "pecans (finely chopped)",
+      "quantity": 2,
+      "unit": "tbsp"
+    },
+    {
+      "item": "ground cinnamon",
+      "quantity": null,
+      "unit": "to taste"
+    },
+    {
+      "item": "ground nutmeg",
+      "quantity": null,
+      "unit": "to taste"
+    },
+    {
+      "item": "water",
+      "quantity": null,
+      "unit": "as needed (for baking dish)"
+    }
+  ],
+  "steps": [
+    "Preheat oven to 350°F.",
+    "Place apples in a shallow baking dish and add water to cover bottom.",
+    "Mix marmalade and chopped pecans.",
+    "Fill centers of apples with mixture.",
+    "Sprinkle with cinnamon and nutmeg.",
+    "Bake uncovered for 1 hour or until tender."
+  ],
+  "tags": ["dessert", "apple", "baked", "fruit"]
+}

@@ -1,0 +1,51 @@
+{
+  "id": "basic-apple-pie",
+  "name": "Basic Apple Pie",
+  "description": "A traditional apple pie with optional variations using brown sugar, honey, nuts, or raisins.",
+  "yield": {
+    "amount": 1,
+    "unit": "9-inch pie"
+  },
+  "ingredients": [
+    {
+      "item": "pie crust (unbaked)",
+      "quantity": 1,
+      "unit": "9-inch"
+    },
+    {
+      "item": "ground cinnamon",
+      "quantity": 1,
+      "unit": "tsp"
+    },
+    {
+      "item": "sugar",
+      "quantity": 0.75,
+      "unit": "cup"
+    },
+    {
+      "item": "apples (peeled or unpeeled, sliced)",
+      "quantity": 6.5,
+      "unit": "medium"
+    },
+    {
+      "item": "butter",
+      "quantity": null,
+      "unit": "to dot"
+    }
+  ],
+  "steps": [
+    "Preheat oven to 425°F.",
+    "Mix cinnamon and sugar together.",
+    "Combine sliced apples with cinnamon sugar.",
+    "Fill pie crust with apple mixture.",
+    "Dot with butter.",
+    "Cover with slitted top crust.",
+    "Bake for ~50 minutes.",
+    "Optional: If apples are juicy, add 1 tbsp flour to filling."
+  ],
+  "variations": [
+    "Replace sugar mix with brown sugar, honey, raisins, or nuts.",
+    "Can mix multiple variation ingredients together."
+  ],
+  "tags": ["dessert", "pie", "apple", "classic"]
+}

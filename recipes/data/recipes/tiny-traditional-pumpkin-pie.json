@@ -1,0 +1,133 @@
+{
+  "id": "tiny-traditional-pumpkin-pie",
+  "name": "Tiny Traditional Pumpkin Pie",
+  "description": "A classic, creamy pumpkin pie made with sweetened condensed milk and warm spices, baked in a 9-inch crust. Includes optional sour cream or streusel toppings.",
+  "yield": {
+    "amount": 1,
+    "unit": "9-inch pie"
+  },
+  "ingredients": [
+    {
+      "item": "unbaked pastry shell",
+      "quantity": 1,
+      "unit": "9-inch"
+    },
+    {
+      "item": "pumpkin puree",
+      "quantity": 16,
+      "unit": "oz",
+      "note": "about 2 cups"
+    },
+    {
+      "item": "sweetened condensed milk (Eagle Brand)",
+      "quantity": 14,
+      "unit": "oz"
+    },
+    {
+      "item": "eggs",
+      "quantity": 2,
+      "unit": "whole"
+    },
+    {
+      "item": "ground cinnamon",
+      "quantity": 1,
+      "unit": "tsp"
+    },
+    {
+      "item": "ground ginger",
+      "quantity": 0.5,
+      "unit": "tsp"
+    },
+    {
+      "item": "ground nutmeg",
+      "quantity": 0.5,
+      "unit": "tsp"
+    },
+    {
+      "item": "salt",
+      "quantity": 0.5,
+      "unit": "tsp"
+    }
+  ],
+  "steps": [
+    "Preheat oven to 425°F.",
+    "In a large mixer bowl, combine all ingredients except the pastry shell; mix well.",
+    "Pour mixture into the pastry shell.",
+    "Bake for 15 minutes at 425°F.",
+    "Reduce oven temperature to 350°F and bake for 35–40 minutes longer, or until a knife inserted 1 inch from the edge comes out clean.",
+    "Cool completely before serving.",
+    "Refrigerate leftovers."
+  ],
+  "toppings": {
+    "sour_cream": {
+      "ingredients": [
+        {
+          "item": "sour cream",
+          "quantity": 0.5,
+          "unit": "cup"
+        },
+        {
+          "item": "sugar",
+          "quantity": 2,
+          "unit": "tbsp"
+        },
+        {
+          "item": "vanilla extract",
+          "quantity": 1,
+          "unit": "tsp"
+        }
+      ],
+      "instructions": [
+        "In a medium bowl, combine sour cream, sugar, and vanilla.",
+        "After 30 minutes of baking at 350°F, spread evenly over pie.",
+        "Bake 10 minutes longer."
+      ]
+    },
+    "streusel": {
+      "ingredients": [
+        {
+          "item": "light brown sugar (packed)",
+          "quantity": 0.5,
+          "unit": "cup"
+        },
+        {
+          "item": "flour",
+          "quantity": 0.5,
+          "unit": "cup"
+        },
+        {
+          "item": "butter or margarine (cold)",
+          "quantity": 0.25,
+          "unit": "cup"
+        },
+        {
+          "item": "chopped nuts",
+          "quantity": 0.25,
+          "unit": "cup"
+        }
+      ],
+      "instructions": [
+        "In a medium bowl, combine brown sugar and flour.",
+        "Cut in cold butter until mixture is crumbly.",
+        "Stir in chopped nuts.",
+        "After 30 minutes of baking at 350°F, sprinkle over pie.",
+        "Bake 20 minutes longer or until golden."
+      ]
+    },
+  "notes": [
+    "Uses sweetened condensed milk, not evaporated milk.",
+    "Makes one 9-inch pie."
+  ],
+  "time": {
+    "prep_minutes": 15,
+    "cook_minutes": 50
+  },
+  "tags": [
+    "dessert",
+    "pie",
+    "pumpkin",
+    "thanksgiving",
+    "holiday"
+  ]
+}
+}

@@ -1,0 +1,76 @@
+{
+  "id": "applesauce-kugel",
+  "name": "Apple sauce Kugel",
+  "description": "A baked noodle-and-apple casserole-style dessert made with eggs, applesauce, cinnamon, and optional raisins.",
+  "source": "Linda",
+  "yield": {
+    "amount": 1,
+    "unit": "9x13 pan"
+  },
+  "ingredients": [
+    {
+      "item": "medium egg noodles",
+      "quantity": 12,
+      "unit": "oz"
+    },
+    {
+      "item": "eggs",
+      "quantity": 3,
+      "unit": "large"
+    },
+    {
+      "item": "margarine",
+      "quantity": 1,
+      "unit": "stick"
+    },
+    {
+      "item": "applesauce",
+      "quantity": 1,
+      "unit": "cup"
+    },
+    {
+      "item": "vanilla extract",
+      "quantity": 1,
+      "unit": "tsp"
+    },
+    {
+      "item": "salt",
+      "quantity": 0.5,
+      "unit": "tsp"
+    },
+    {
+      "item": "ground cinnamon",
+      "quantity": 1,
+      "unit": "tsp"
+    },
+    {
+      "item": "raisins (optional)",
+      "quantity": null,
+      "unit": "to taste"
+    },
+    {
+      "item": "apricots (optional, chopped)",
+      "quantity": null,
+      "unit": "to taste"
+    }
+  ],
+  "steps": [
+    "Preheat oven to 350°F.",
+    "Cook noodles according to package directions and drain.",
+    "Melt margarine.",
+    "Beat eggs in a large bowl.",
+    "Stir melted margarine into eggs.",
+    "Add noodles, applesauce, vanilla, salt, cinnamon, and optional raisins/apricots.",
+    "Mix well.",
+    "Pour into a greased 9x13 or deep baking pan.",
+    "Sprinkle cinnamon over the top.",
+    "Bake for 1 hour at 350°F."
+  ],
+  "tags": [
+    "dessert",
+    "baked",
+    "noodles",
+    "apple",
+    "casserole"
+  ]
+}

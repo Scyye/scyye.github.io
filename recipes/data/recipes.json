@@ -1,14 +1,50 @@
 [
   {
-    "id": "pancakes",
-    "title": "Classic Pancakes",
-    "image": "images/pancakes.jpg",
-    "description": "Fluffy homemade pancakes."
+    "id": "tiny-traditional-pumpkin-pie",
+    "title": "Tiny Traditional Pumpkin Pie",
+    "description": "Classic pumpkin pie made with sweetened condensed milk and warm spices.",
+    "prepTime": null,
+    "cookTime": null,
+    "tags": ["dessert", "pie", "pumpkin"]
   },
   {
-    "id": "cookies",
-    "title": "Chocolate Chip Cookies",
-    "image": "images/cookies.jpg",
-    "description": "Soft and chewy cookies."
+    "id": "eleanors-apple-crisp",
+    "title": "Eleanor’s Apple Crisp",
+    "description": "A baked apple crisp with cinnamon-spiced apples and buttery crumb topping.",
+    "prepTime": null,
+    "cookTime": null,
+    "tags": ["dessert", "apple", "baked"]
+  },
+  {
+    "id": "orange-pecan-baked-apples",
+    "title": "Orange Pecan Baked Apples",
+    "description": "Whole baked apples filled with orange marmalade and pecans.",
+    "prepTime": null,
+    "cookTime": null,
+    "tags": ["dessert", "apple", "fruit"]
+  },
+  {
+    "id": "basic-apple-pie",
+    "title": "Basic Apple Pie",
+    "description": "Traditional apple pie with optional variations like nuts, raisins, or honey.",
+    "prepTime": null,
+    "cookTime": null,
+    "tags": ["dessert", "pie", "apple"]
+  },
+  {
+    "id": "applesauce-kugel",
+    "title": "Apple sauce Kugel",
+    "description": "Baked noodle-based dish with applesauce and cinnamon.",
+    "prepTime": null,
+    "cookTime": null,
+    "tags": ["dessert", "baked", "noodles"]
+  },
+  {
+    "id": "bacon-cheese-rollups",
+    "title": "Bacon & Cheese Roll-ups",
+    "description": "Bacon-wrapped cream cheese bread rolls baked until crispy.",
+    "prepTime": null,
+    "cookTime": null,
+    "tags": ["appetizer", "bacon", "cheese"]
   }
 ]

@@ -8,98 +8,557 @@
 
 <style>
 
+:root {
+    --bg: #f3f4f6;
+    --card: #ffffff;
+    --text: #111827;
+    --muted: #6b7280;
+    --accent: #ea580c;
+    --border: #e5e7eb;
+    --shadow: 0 4px 18px rgba(0,0,0,0.08);
+    --radius: 18px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
 body {
-    font-family: Arial, sans-serif;
     margin: 0;
-    padding: 20px;
-    background: #f5f5f5;
-    color: #222;
+    background: var(--bg);
+    color: var(--text);
+    font-family: Inter, Arial, sans-serif;
+}
+
+#app {
+    max-width: 1100px;
+    margin: auto;
+    padding: 32px 20px 80px;
 }
 
 h1, h2, h3 {
     margin-top: 0;
 }
 
-#app {
-    max-width: 900px;
-    margin: auto;
-}
-
-.recipe-list {
+.recipe-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
 }
 
 .recipe-card {
-    background: white;
-    border-radius: 12px;
-    padding: 20px;
-    cursor: pointer;
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow);
     transition: 0.2s;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    cursor: pointer;
+    border: 1px solid var(--border);
 }
 
 .recipe-card:hover {
-    transform: translateY(-2px);
+    transform: translateY(-4px);
+}
+
+.recipe-description {
+    color: var(--muted);
+    line-height: 1.5;
 }
 
 .recipe-meta {
-    color: #666;
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-top: 18px;
     font-size: 14px;
-    margin-bottom: 15px;
+    color: var(--muted);
 }
 
-.back-button {
-    margin-bottom: 20px;
-    cursor: pointer;
-    display: inline-block;
-    color: #0066cc;
+.tag {
+    background: #f1f5f9;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+}
+
+.recipe-layout {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 30px;
+}
+
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
 }
 
 .ingredients li,
 .instructions li {
-    margin-bottom: 10px;
+    margin-bottom: 12px;
+    line-height: 1.5;
 }
 
-.tag {
-    display: inline-block;
-    background: #eee;
-    padding: 4px 10px;
-    border-radius: 999px;
-    margin-right: 5px;
-    margin-top: 5px;
+.back-button {
+    margin-bottom: 24px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--accent);
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.button-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+button {
+    border: none;
+    background: var(--accent);
+    color: white;
+    padding: 12px 16px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+button.secondary {
+    background: #e5e7eb;
+    color: #111827;
+}
+
+.serving-control {
+    margin-top: 18px;
+}
+
+.serving-number {
+    font-size: 30px;
+    font-weight: bold;
+    color: var(--accent);
+}
+
+.slider {
+    width: 100%;
+    margin-top: 14px;
+}
+
+.measurement-toggle {
+    display: flex;
+    gap: 10px;
+    margin-top: 14px;
+}
+
+.measurement-toggle button.active {
+    background: var(--accent);
+    color: white;
+}
+
+.measurement-toggle button:not(.active) {
+    background: #e5e7eb;
+    color: black;
+}
+
+.section-title {
+    margin-bottom: 18px;
+}
+
+.meta-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+}
+
+.meta-box {
+    background: #f8fafc;
+    padding: 14px;
+    border-radius: 14px;
+}
+
+.meta-label {
     font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 4px;
+}
+
+.meta-value {
+    font-weight: bold;
+}
+
+@media (max-width: 900px) {
+
+    .recipe-layout {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+@media print {
+
+    body {
+        background: white;
+    }
+
+    .back-button,
+    .button-row,
+    .serving-control,
+    .measurement-toggle {
+        display: none !important;
+    }
+
+    .card {
+        box-shadow: none;
+        border: 1px solid #ddd;
+    }
+
+}
+
+@media print {
+
+  body {
+    background: white;
+    padding: 0;
+  }
+
+  .container {
+    box-shadow: none;
+    border-radius: 0;
+    max-width: 100%;
+    padding: 0;
+  }
+
+  button {
+    display: none !important;
+  }
+
+  .topbar {
+    align-items: flex-start;
+  }
+
+  img.qr {
+    width: 90px;
+    height: 90px;
+  }
+
+  .section {
+    margin-top: 12px;
+  }
+
+  h1 {
+    font-size: 22px;
+  }
+
+  .small {
+    font-size: 12px;
+  }
+
+  /* Prevent ugly page breaks */
+  .section, .ingredient, li {
+    page-break-inside: avoid;
+  }
+}
+
+.print-mode .container {
+  background: white;
+  box-shadow: none;
+  max-width: 700px;
+  margin: auto;
+}
+@media print {
+  body {
+    font-family: Georgia, serif;
+  }
+
+  h1 {
+    letter-spacing: 0.3px;
+  }
+
+  .ingredient {
+    padding: 2px 0;
+  }
+
+  ol {
+    line-height: 1.4;
+  }
 }
 
 </style>
 </head>
 <body>
 
-<div id="app">
-    Loading...
-</div>
+<div id="app">Loading...</div>
 
 <script>
 
 const app = document.getElementById("app");
 
+let currentServings = 1;
+let baseServings = 1;
+let currentRecipe = null;
+let currentUnit = "imperial";
+
 async function fetchJSON(path) {
+
     const response = await fetch(path);
 
     if (!response.ok) {
-        throw new Error("Failed to load " + path);
+        throw new Error(`Failed to fetch ${path}`);
     }
 
     return await response.json();
 }
 
+
+
 function navigateToRecipe(id) {
-    location.hash = "recipe=" + id;
+    location.hash = `recipe=${id}`;
 }
 
 function goHome() {
     location.hash = "";
+}
+
+function gcd(a, b) {
+    return b ? gcd(b, a % b) : a;
+}
+
+function scaleAmount(amount, from, to) {
+    console.log({ amount, from, to });
+    return (amount / from) * to;
+}
+
+function convertUnit(unit, amount) {
+
+    if (currentUnit === "metric") {
+
+        switch(unit) {
+
+            case "cup":
+            case "cups":
+
+                return {
+                    amount: amount * 236.588,
+                    unit: "ml"
+                };
+
+            case "tbsp":
+
+                return {
+                    amount: amount * 15,
+                    unit: "ml"
+                };
+
+            case "tsp":
+
+                return {
+                    amount: amount * 5,
+                    unit: "ml"
+                };
+
+            case "oz":
+
+                return {
+                    amount: amount * 28.35,
+                    unit: "g"
+                };
+
+            case "lb":
+
+                return {
+                    amount: amount * 453.592,
+                    unit: "g"
+                };
+        }
+    }
+
+    if (currentUnit === "imperial") {
+
+        switch(unit) {
+
+            case "ml":
+
+                return {
+                    amount: amount / 236.588,
+                    unit: "cup"
+                };
+
+            case "g":
+
+                return {
+                    amount: amount / 28.35,
+                    unit: "oz"
+                };
+        }
+    }
+
+    return {
+        amount,
+        unit
+    };
+}
+
+function roundCookingFraction(value) {
+
+    const whole = Math.floor(value);
+
+    const fraction = value - whole;
+
+    const commonFractions = [
+        { decimal: 0.125, text: "1/8" },
+        { decimal: 0.25,  text: "1/4" },
+        { decimal: 0.333, text: "1/3" },
+        { decimal: 0.375, text: "3/8" },
+        { decimal: 0.5,   text: "1/2" },
+        { decimal: 0.625, text: "5/8" },
+        { decimal: 0.666, text: "2/3" },
+        { decimal: 0.75,  text: "3/4" },
+        { decimal: 0.875, text: "7/8" }
+    ];
+
+    let closest = null;
+    let closestDistance = Infinity;
+
+    for (const option of commonFractions) {
+
+        const distance =
+            Math.abs(fraction - option.decimal);
+
+        if (distance < closestDistance) {
+
+            closestDistance = distance;
+            closest = option;
+        }
+    }
+
+    // Close enough to whole number
+    if (closestDistance > 0.08) {
+
+        return (
+            Math.round(value * 10) / 10
+        ).toString();
+    }
+
+    if (whole === 0) {
+        return closest.text;
+    }
+
+    return `${whole} ${closest.text}`;
+}
+
+function cleanAmount(amount, unit = "") {
+
+    // METRIC ROUNDING
+    if (currentUnit === "metric") {
+
+        switch(unit) {
+
+            case "ml":
+
+                // Large liquid amounts
+                if (amount >= 100) {
+                    return Math.round(amount / 10) * 10;
+                }
+
+                // Smaller liquids
+                return Math.round(amount / 5) * 5;
+
+            case "g":
+
+                // Large weights
+                if (amount >= 100) {
+                    return Math.round(amount / 5) * 5;
+                }
+
+                return Math.round(amount);
+
+            case "kg":
+            case "l":
+
+                return (
+                    Math.round(amount * 10) / 10
+                ).toString();
+        }
+
+        return (
+            Math.round(amount * 10) / 10
+        ).toString();
+    }
+
+    // IMPERIAL ROUNDING
+
+    // Tiny amounts
+    if (amount < 0.125) {
+
+        return (
+            Math.round(amount * 100) / 100
+        ).toString();
+    }
+
+    // Large amounts
+    if (amount >= 10) {
+
+        return (
+            Math.round(amount * 10) / 10
+        ).toString();
+    }
+
+    return roundCookingFraction(amount);
+}
+function formatIngredient(ingredient) {
+
+    if (typeof ingredient === "string") {
+        return ingredient;
+    }
+
+    let amount = ingredient.quantity;
+
+    amount = scaleAmount(
+        amount,
+        baseServings,
+        currentServings
+    );
+
+    let unit = ingredient.unit || "";
+
+    const converted = convertUnit(unit, amount);
+
+    amount = converted.amount;
+    unit = converted.unit;
+
+    amount = cleanAmount(amount, unit);
+
+    if (unit === "piece" || unit === "pieces") {
+        unit = "";
+    }
+
+    return `
+        ${amount}
+        ${unit}
+        ${ingredient.item}
+    `
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function enterPrint() {
+  document.body.classList.add("print-mode");
+
+  // ensure QR is fully generated before print
+  window.print();
+
+  setTimeout(() => {
+    document.body.classList.remove("print-mode");
+  }, 500);
 }
 
 async function renderHome() {
@@ -109,97 +568,292 @@ async function renderHome() {
     app.innerHTML = `
         <h1>Recipes</h1>
 
-        <div class="recipe-list">
+        <div class="recipe-grid">
+
             ${recipes.map(recipe => `
+
                 <div class="recipe-card"
                      onclick="navigateToRecipe('${recipe.id}')">
 
                     <h2>${recipe.title}</h2>
 
-                    <p>${recipe.description || ""}</p>
+                    <p class="recipe-description">
+                        ${recipe.description || ""}
+                    </p>
 
                     <div class="recipe-meta">
-                        ${recipe.prepTime || "Unknown prep"} •
-                        ${recipe.cookTime || "Unknown cook"}
+
+                        <span>
+                            ⏱ Prep: ${recipe.prepTime || "?"}
+                        </span>
+
+                        <span>
+                            🔥 Cook: ${recipe.cookTime || "?"}
+                        </span>
+
                     </div>
 
-                    ${(recipe.tags || []).map(tag =>
-                        `<span class="tag">${tag}</span>`
-                    ).join("")}
+                    <div style="margin-top:16px;">
+                        ${(recipe.tags || []).map(tag =>
+                            `<span class="tag">${tag}</span>`
+                        ).join("")}
+                    </div>
+
                 </div>
+
             `).join("")}
+
         </div>
     `;
 }
 
 async function renderRecipe(id) {
 
-    try {
+    currentRecipe = await fetchJSON(
+        `./data/recipes/${id}.json`
+    );
 
-        const recipe = await fetchJSON(
-            `./data/recipes/${id}.json`
-        );
+    baseServings = currentRecipe.servings || 1;
+    currentServings = baseServings;
 
-        app.innerHTML = `
-            <div class="back-button"
-                 onclick="goHome()">
-                 ← Back
+    drawRecipe();
+}
+
+function generateQRCodeURL() {
+
+    const url = new URL(window.location.href);
+
+    url.hash =
+        `recipe=${currentRecipe.id}` +
+        `&servings=${currentServings}` +
+        `&unit=${currentUnit}`;
+
+    return (
+        "https://api.qrserver.com/v1/create-qr-code/" +
+        "?size=120x120" +
+        "&data=" +
+        encodeURIComponent(url.toString())
+    );
+}
+
+function drawRecipe() {
+
+    const recipe = currentRecipe;
+
+    const qrURL = generateQRCodeURL();
+
+    app.innerHTML = `
+
+        <div class="back-button"
+             onclick="goHome()">
+             ← Back
+        </div>
+
+        <div class="recipe-layout">
+
+            <div class="sidebar">
+
+                <div class="card">
+
+                    <div style="
+                        display:flex;
+                        justify-content:space-between;
+                        align-items:flex-start;
+                        gap:20px;
+                    ">
+
+                        <div>
+
+                            <h1 style="
+                                font-size:2rem;
+                                margin-bottom:10px;
+                                line-height:1.1;
+                            ">
+                                ${recipe.name}
+                            </h1>
+
+                            <p class="recipe-description">
+                                ${recipe.description || ""}
+                            </p>
+
+                        </div>
+
+                        <img
+                            src="${qrURL}"
+                            alt="QR Code"
+                            style="
+                                width:90px;
+                                height:90px;
+                                border-radius:12px;
+                                border:1px solid var(--border);
+                                background:white;
+                                padding:6px;
+                            "
+                        >
+
+                    </div>
+
+                    <div class="meta-grid"
+                         style="margin-top:22px;">
+
+                        <div class="meta-box">
+                            <div class="meta-label">
+                                Prep
+                            </div>
+
+                            <div class="meta-value">
+                                ${recipe.prepTime || "?"}
+                            </div>
+                        </div>
+
+                        <div class="meta-box">
+                            <div class="meta-label">
+                                Cook
+                            </div>
+
+                            <div class="meta-value">
+                                ${recipe.cookTime || "?"}
+                            </div>
+                        </div>
+
+                        <div class="meta-box">
+                            <div class="meta-label">
+                                Yield
+                            </div>
+
+                            <div class="meta-value">
+                                ${currentServings} servings
+                            </div>
+                        </div>
+
+                        <div class="meta-box">
+                            <div class="meta-label">
+                                Units
+                            </div>
+
+                            <div class="meta-value">
+                                ${
+                                    currentUnit === "metric"
+                                    ? "Metric"
+                                    : "Imperial"
+                                }
+                            </div>
+                        </div>
+
+                        <button onclick="enterPrint()">Print</button>
+
+                    </div>
+
+                    <div class="serving-control">
+
+                        <div class="meta-label">
+                            Adjust Yield
+                        </div>
+
+                        <div class="serving-number">
+                            ${currentServings}
+                        </div>
+
+                        <input
+                            class="slider"
+                            type="range"
+                            min="1"
+                            max="${baseServings * 4}"
+                            value="${currentServings}"
+                            oninput="updateServings(this.value)"
+                        >
+
+                    </div>
+
+                    <div class="measurement-toggle">
+
+                        <button
+                            class="${currentUnit === "metric" ? "active" : ""}"
+                            onclick="setUnit('metric')">
+
+                            Metric
+
+                        </button>
+
+                        <button
+                            class="${currentUnit === "imperial" ? "active" : ""}"
+                            onclick="setUnit('imperial')">
+
+                            Imperial
+
+                        </button>
+
+                    </div>
+
+                    <div class="button-row"
+                         style="margin-top:20px;">
+
+                        <button onclick="window.print()">
+                            Print Recipe
+                        </button>
+
+                    </div>
+
+                </div>
+
             </div>
 
-            <h1>${recipe.title}</h1>
+            <div style="
+                display:flex;
+                flex-direction:column;
+                gap:20px;
+            ">
 
-            <p>${recipe.description || ""}</p>
+                <div class="card">
 
-            <div class="recipe-meta">
-                Prep: ${recipe.prepTime || "?"}
-                <br>
-                Cook: ${recipe.cookTime || "?"}
-                <br>
-                Servings: ${recipe.servings || "?"}
+                    <h2 class="section-title">
+                        Ingredients
+                    </h2>
+
+                    <ul class="ingredients">
+
+                        ${(recipe.ingredients || []).map(i => `
+                            <li>${formatIngredient(i)}</li>
+                        `).join("")}
+
+                    </ul>
+
+                </div>
+
+                <div class="card">
+
+                    <h2 class="section-title">
+                        Instructions
+                    </h2>
+
+                    <ol class="instructions">
+
+                        ${(recipe.steps || []).map(i => `
+                            <li>${i}</li>
+                        `).join("")}
+
+                    </ol>
+
+                </div>
+
             </div>
 
-            <h2>Ingredients</h2>
+        </div>
+    `;
+}
 
-            <ul class="ingredients">
-                ${(recipe.ingredients || []).map(i =>
-                    `<li>${i}</li>`
-                ).join("")}
-            </ul>
+function updateServings(value) {
 
-            <h2>Instructions</h2>
+    currentServings = Number(value);
 
-            <ol class="instructions">
-                ${(recipe.instructions || []).map(i =>
-                    `<li>${i}</li>`
-                ).join("")}
-            </ol>
+    drawRecipe();
+}
 
-            ${
-                recipe.tags?.length
-                ? `
-                    <h3>Tags</h3>
+function setUnit(unit) {
 
-                    ${recipe.tags.map(tag =>
-                        `<span class="tag">${tag}</span>`
-                    ).join("")}
-                  `
-                : ""
-            }
-        `;
+    currentUnit = unit;
 
-    } catch (err) {
-
-        app.innerHTML = `
-            <h1>Recipe Not Found</h1>
-
-            <p>${err.message}</p>
-
-            <div class="back-button"
-                 onclick="goHome()">
-                 ← Back
-            </div>
-        `;
-    }
+    drawRecipe();
 }
 
 async function router() {
@@ -208,9 +862,27 @@ async function router() {
 
     if (hash.startsWith("#recipe=")) {
 
-        const id = hash.replace("#recipe=", "");
+        const params = new URLSearchParams(
+            hash.replace("#", "").replace(/&/g, "&")
+        );
+
+        const id = params.get("recipe");
+
+        const servings = params.get("servings");
+
+        const unit = params.get("unit");
 
         await renderRecipe(id);
+
+        if (servings) {
+            currentServings = Number(servings);
+        }
+
+        if (unit) {
+            currentUnit = unit;
+        }
+
+        drawRecipe();
 
     } else {
 

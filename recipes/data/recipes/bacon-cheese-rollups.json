@@ -1,0 +1,50 @@
+{
+  "id": "bacon-cheese-rollups",
+  "name": "Bacon & Cheese Roll-ups",
+  "description": "Crispy baked bacon-wrapped bread roll-ups filled with a creamy cheese mixture.",
+  "yield": {
+    "amount": 25,
+    "unit": "pieces"
+  },
+  "ingredients": [
+    {
+      "item": "cream cheese",
+      "quantity": 1,
+      "unit": "block"
+    },
+    {
+      "item": "egg",
+      "quantity": 1,
+      "unit": "large"
+    },
+    {
+      "item": "white bread (crust removed)",
+      "quantity": null,
+      "unit": "slices"
+    },
+    {
+      "item": "bacon strips",
+      "quantity": null,
+      "unit": "about 25 strips"
+    }
+  ],
+  "steps": [
+    "Preheat oven to 400°F.",
+    "Mix cream cheese and egg together until smooth.",
+    "Flatten bread slices and remove crusts.",
+    "Spread cream cheese mixture onto bread and roll tightly.",
+    "Wrap each roll with a strip of bacon.",
+    "Place on a cookie sheet.",
+    "Bake for 20–25 minutes until bacon is cooked and crisp."
+  ],
+  "notes": [
+    "Recipe yields approximately 25 roll-ups."
+  ],
+  "tags": [
+    "appetizer",
+    "bacon",
+    "cheese",
+    "finger food",
+    "baked"
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "id": "eleanors-apple-crisp",
+  "name": "Eleanor’s Apple Crisp",
+  "description": "A classic baked apple crisp with cinnamon-spiced apples and a buttery crumb topping.",
+  "yield": {
+    "amount": 6,
+    "unit": "servings"
+  },
+  "ingredients": [
+    {
+      "item": "apples (sliced and pared)",
+      "quantity": 5,
+      "unit": "cups"
+    },
+    {
+      "item": "water",
+      "quantity": 0.25,
+      "unit": "cup"
+    },
+    {
+      "item": "ground cinnamon",
+      "quantity": 1,
+      "unit": "tsp"
+    },
+    {
+      "item": "salt",
+      "quantity": 0.25,
+      "unit": "tsp"
+    },
+    {
+      "item": "sugar",
+      "quantity": 1,
+      "unit": "cup"
+    },
+    {
+      "item": "butter or margarine",
+      "quantity": 0.33,
+      "unit": "cup"
+    },
+    {
+      "item": "flour",
+      "quantity": 0.75,
+      "unit": "cup"
+    }
+  ],
+  "steps": [
+    "Preheat oven to 350°F.",
+    "Spread sliced apples evenly in a greased 8×8×2 inch baking pan.",
+    "Sprinkle water, cinnamon, and salt over apples.",
+    "Mix sugar, butter, and flour until crumbly.",
+    "Sprinkle mixture over apples.",
+    "Bake uncovered for 40 minutes."
+  ],
+  "tags": ["dessert", "apple", "baked", "crisp"]
+}
