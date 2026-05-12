@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Distore Redirect</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #111827;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.card {
+    background: #1f2937;
+    padding: 24px;
+    border-radius: 16px;
+    width: 420px;
+    text-align: center;
+}
+
+small {
+    opacity: 0.75;
+    display: block;
+    margin-top: 10px;
+    word-break: break-word;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+    <h2>Redirecting…</h2>
+    <small id="status">Loading community</small>
+</div>
+
+<script>
+(async () => {
+    const status = document.getElementById("status");
+
+    let community = null;
+
+    // ----------------------------
+    // SUPPORT MULTIPLE ROUTES
+    // ----------------------------
+
+    // Option 1: /#/repo
+    if (location.hash) {
+        community = location.hash.replace("#", "").trim();
+    }
+
+    // Option 2: ?community=repo
+    if (!community) {
+        const params = new URLSearchParams(location.search);
+        community = params.get("community");
+    }
+
+    // Option 3: /distore/repo (PATH MODE)
+    if (!community) {
+        const parts = location.pathname.split("/").filter(Boolean);
+        // assumes /distore/{id}
+        if (parts.length >= 2) {
+            community = parts[1];
+        }
+    }
+
+    if (!community) {
+        document.body.innerHTML = "<h2>Missing community id</h2>";
+        return;
+    }
+
+    community = community.toLowerCase();
+
+    status.textContent = `Loading ${community}...`;
+
+    try {
+        const url =
+            `https://raw.githubusercontent.com/thunderstore-io/ecosystem-schema/master/games/data/${community}.yml`;
+
+        const res = await fetch(url);
+
+        if (!res.ok) {
+            throw new Error("Community not found in ecosystem schema");
+        }
+
+        const text = await res.text();
+
+        let discord = null;
+        let displayName = community;
+
+        for (const line of text.split(/\r?\n/)) {
+            const t = line.trim();
+
+            if (t.startsWith("discordUrl:")) {
+                discord = t
+                    .replace("discordUrl:", "")
+                    .trim()
+                    .replace(/^["']|["']$/g, "");
+            }
+
+            if (t.startsWith("displayName:")) {
+                displayName = t
+                    .replace("displayName:", "")
+                    .trim()
+                    .replace(/^["']|["']$/g, "");
+            }
+        }
+
+        if (!discord) {
+            throw new Error("No discordUrl found in YAML");
+        }
+
+        status.textContent = `Redirecting to ${displayName}...`;
+
+        // normalize + force absolute URL
+        const finalUrl = new URL(discord).href;
+
+        setTimeout(() => {
+            window.location.replace(finalUrl);
+        }, 300);
+
+    } catch (err) {
+        console.error(err);
+        status.textContent = err.message;
+    }
+})();
+</script>
+
+</body>
+</html>
