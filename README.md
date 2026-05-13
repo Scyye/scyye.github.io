@@ -1,6 +1,7 @@
 # Scyye
 You can access the site [here](https://scyye.dev)
 
+All code and files on this repo are under MIT License, unless otherwise stated
 # Contact
 If you need to contact me, there are plenty of methods.
 
