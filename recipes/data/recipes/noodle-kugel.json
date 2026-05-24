@@ -1,0 +1,83 @@
+{
+  "id": "noodle-kugel",
+  "name": "Noodle Kugel",
+  "description": "25m prep 1hr30m cooking",
+  "source": "Grandma Joyce",
+  "yield": {
+    "amount": 2,
+    "unit": "9x13 Pan(s)"
+  },
+  "ingredients": [
+    {
+      "item": "medium noodles prepare (according to package)",
+      "quantity": 16,
+      "unit": "oz"
+    },
+    {
+      "item": "sour cream",
+      "quantity": 16,
+      "unit": "oz"
+    },
+    {
+      "item": "cottage cheese",
+      "quantity": 2,
+      "unit": "lb"
+    },
+    {
+      "item": "beaten eggs",
+      "quantity": 5,
+      "unit": "whole"
+    },
+    {
+      "item": "sugar",
+      "quantity": 0.75,
+      "unit": "cup"
+    },
+    {
+      "item": "vanilla",
+      "quantity": 2,
+      "unit": "tsp"
+    },
+    {
+      "item": "butter",
+      "quantity": 9,
+      "unit": "tbsp"
+    },
+    {
+      "item": "milk",
+      "quantity": 2,
+      "unit": "cups"
+    },
+    {
+      "item": "cinnamon sugar",
+      "quantity": 2,
+      "unit": "tsp"
+    },
+    {
+      "item": "cornflake crumbs",
+      "quantity": 0.5,
+      "unit": "cup"
+    }
+  ],
+  "steps": [
+    "Mix cooled noodles, sour cream, and cottage cheese together in a bowl",
+    "Mix eggs, sugar, vanilla in separate bowl",
+    "Add eggs, sugar, and vanilla to the noodle mixture, stir until combined",
+    "Melt 4 tbsp of butter in each pan, make sure sides and bottom of pans are coated with butter",
+    "Pour excess melted butter into mixture",
+    "Equally divide mixture into the pans",
+    "Pour 1 cup milk into each filled pan",
+    "Cover, refrigerate overnight",
+    "On the next day, preheat oven to 350f (180c)",
+    "Sprinkle top of each pan with 1/4 cup of cornflake crumbs, 1 tsp cinnamon sugar, and little bits of butter",
+    "Bake approx. 30 minutes covered with foil",
+    "Remove foil and bake for 1 hour, until golden and set",
+    "Remove from oven and let stand for 30 minutes to allow for easy cutting; ENJOY"
+  ],
+  "tags": [
+    "kugel",
+    "jewish",
+    "noddle",
+    "carb"
+  ]
+}

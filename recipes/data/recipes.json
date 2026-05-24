@@ -40,6 +40,13 @@
     "tags": ["dessert", "baked", "noodles"]
   },
   {
+    "id": "noodle-kugel",
+    "title": "Grandma Joyce's Noodle Kugel",
+    "description": "A delicious noodle kugel/pudding",
+    "prepTime": 30,
+    "cookTime": 90
+  },
+  {
     "id": "bacon-cheese-rollups",
     "title": "Bacon & Cheese Roll-ups",
     "description": "Bacon-wrapped cream cheese bread rolls baked until crispy.",
