@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Recipe JSON Builder</title>
+
+<style>
+
+:root {
+    --bg: #f3f4f6;
+    --card: #ffffff;
+    --text: #111827;
+    --muted: #6b7280;
+    --accent: #ea580c;
+    --border: #e5e7eb;
+    --radius: 18px;
+    --shadow: 0 4px 18px rgba(0,0,0,0.08);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: Inter, Arial, sans-serif;
+}
+
+.container {
+    max-width: 1300px;
+    margin: auto;
+    padding: 30px 20px 100px;
+}
+
+h1 {
+    margin-top: 0;
+    margin-bottom: 30px;
+}
+
+.layout {
+    display: grid;
+    grid-template-columns: 1fr 500px;
+    gap: 24px;
+}
+
+.card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+}
+
+.section {
+    margin-bottom: 28px;
+}
+
+.section h2 {
+    margin-top: 0;
+    margin-bottom: 18px;
+    font-size: 1.3rem;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: var(--muted);
+    font-weight: 600;
+}
+
+input,
+textarea,
+select {
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    font-size: 15px;
+    font-family: inherit;
+}
+
+textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+button {
+    border: none;
+    background: var(--accent);
+    color: white;
+    padding: 12px 16px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+button.secondary {
+    background: #e5e7eb;
+    color: #111827;
+}
+
+.button-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.ingredient,
+.instruction {
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 14px;
+    background: #fafafa;
+}
+
+.preview {
+    background: #111827;
+    color: #f9fafb;
+    border-radius: 16px;
+    padding: 20px;
+    overflow: auto;
+    max-height: calc(100vh - 100px);
+    position: sticky;
+    top: 20px;
+}
+
+.preview pre {
+    margin: 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-size: 14px;
+}
+
+.small {
+    font-size: 13px;
+    color: var(--muted);
+}
+
+.inline-grid {
+    display: grid;
+    grid-template-columns: 120px 140px 1fr auto;
+    gap: 10px;
+}
+
+.remove-btn {
+    background: #dc2626;
+    padding: 10px 14px;
+}
+
+@media (max-width: 1100px) {
+
+    .layout {
+        grid-template-columns: 1fr;
+    }
+
+    .preview {
+        position: relative;
+        max-height: unset;
+    }
+
+}
+
+.type-field {
+    position: relative;
+}
+
+.suggestions {
+
+    position: absolute;
+
+    top: calc(100% + 4px);
+
+    left: 0;
+    right: 0;
+
+    background: white;
+
+    border: 1px solid var(--border);
+
+    border-radius: 12px;
+
+    overflow: hidden;
+
+    z-index: 999999;
+
+    box-shadow: 0 10px 24px rgba(0,0,0,0.12);
+
+    display: none;
+}
+
+.suggestion {
+
+    padding: 10px 12px;
+
+    cursor: pointer;
+
+    transition: 0.15s;
+}
+
+.suggestion:hover {
+
+    background: #f3f4f6;
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <h1>Recipe JSON Builder</h1>
+
+    <div class="layout">
+
+        <div>
+
+            <div class="card section">
+
+                <h2>Recipe Info</h2>
+
+                <div class="grid">
+
+                    <div>
+                        <label>Recipe ID</label>
+                        <input id="id" placeholder="pancakes" oninput="handleIDInput(this)">
+                    </div>
+
+                    <div>
+                        <label>Title</label>
+                        <input id="title" placeholder="Classic Pancakes" oninput="updateAutoID()">
+                    </div>
+
+                    <div>
+                        <label>Prep Time</label>
+                        <input id="prepTime" placeholder="10 mins">
+                    </div>
+
+                    <div>
+                        <label>Cook Time</label>
+                        <input id="cookTime" placeholder="15 mins">
+                    </div>
+
+                    <div>
+                        <label>Source</label>
+
+                        <input
+                            id="source"
+                            placeholder="Grandma Linda"
+                        >
+                    </div>
+
+                    <div>
+                        <label>Yield Amount</label>
+
+                        <input
+                            id="yieldAmount"
+                            type="number"
+                            step="0.01"
+                            value="1"
+                        >
+                    </div>
+
+                    <div>
+                        <label>Yield Unit</label>
+
+                        <input
+                            id="yieldUnit"
+                            placeholder="9x13 pan"
+                        >
+                    </div>
+
+                </div>
+
+                <div style="margin-top:18px;">
+
+                    <label>Description</label>
+
+                    <textarea id="description"></textarea>
+
+                </div>
+
+                <div style="margin-top:18px;">
+
+                    <label>Tags (comma separated)</label>
+
+                    <input id="tags"
+                           placeholder="breakfast, easy">
+
+                </div>
+
+            </div>
+
+            <div class="card section">
+
+                <div style="
+                    display:flex;
+                    justify-content:space-between;
+                    align-items:center;
+                    margin-bottom:20px;
+                ">
+
+                    <h2 style="margin:0;">
+                        Ingredients
+                    </h2>
+
+                    <button onclick="addIngredient()">
+                        Add Ingredient
+                    </button>
+
+                </div>
+
+                <div id="ingredients"></div>
+
+            </div>
+
+            <div class="card section">
+
+                <div style="
+                    display:flex;
+                    justify-content:space-between;
+                    align-items:center;
+                    margin-bottom:20px;
+                ">
+
+                    <h2 style="margin:0;">
+                        Steps
+                    </h2>
+
+                    <button onclick="addInstruction()">
+                        Add Step
+                    </button>
+
+                </div>
+
+                <div id="instructions"></div>
+
+            </div>
+
+            <div class="card">
+
+                <div class="button-row">
+
+                    <button onclick="downloadJSON()">
+                        Download JSON
+                    </button>
+
+                    <button class="secondary"
+                            onclick="copyJSON()">
+
+                        Copy JSON
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="preview">
+
+            <pre id="jsonPreview">{}</pre>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+let idManuallyEdited = false;
+
+const measurementSuggestions = [
+
+    "cup",
+    "cups",
+
+    "tbsp",
+    "tsp",
+
+    "ml",
+    "l",
+
+    "g",
+    "kg",
+
+    "oz",
+    "lb",
+
+    "piece",
+    "pieces",
+
+    "slice",
+    "slices",
+
+    "clove",
+    "cloves",
+
+    "can",
+    "cans",
+
+    "package",
+
+    "pinch",
+    "dash",
+
+    "bunch",
+
+    "stick",
+
+    "jar",
+
+    "fillet",
+
+    "block"
+
+];
+
+function handleIDInput(input) {
+
+    idManuallyEdited = true;
+
+    const cursor =
+        input.selectionStart;
+
+    const originalLength =
+        input.value.length;
+
+    input.value =
+        sanitizeRecipeID(input.value);
+
+    const newLength =
+        input.value.length;
+
+    const offset =
+        newLength - originalLength;
+
+    input.setSelectionRange(
+        cursor + offset,
+        cursor + offset
+    );
+
+    updateJSON();
+}
+
+function ingredientTemplate() {
+
+    return `
+        <div class="ingredient">
+
+            <div class="inline-grid">
+
+                <div>
+
+                    <label>Amount</label>
+
+                    <input
+                        type="number"
+                        step="0.01"
+                        class="ingredient-amount"
+                    >
+
+                </div>
+
+                <div style="position:relative;">
+
+                    <label>Type</label>
+
+                    <input
+    type="text"
+    class="ingredient-type"
+    placeholder="cup"
+    autocomplete="off"
+>
+
+                    <div class="suggestions"></div>
+
+                </div>
+
+                <div>
+
+                    <label>Ingredient</label>
+
+                    <input
+                        class="ingredient-item"
+                        placeholder="flour"
+                    >
+
+                </div>
+
+                <div style="
+                    display:flex;
+                    align-items:end;
+                ">
+
+                    <button
+                        class="remove-btn"
+                        onclick="
+                            this.closest('.ingredient').remove();
+                            updateJSON();
+                        "
+                    >
+                        X
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+    `;
+}
+function instructionTemplate() {
+
+    return `
+        <div class="instruction">
+
+            <div style="
+                display:grid;
+                grid-template-columns:1fr auto;
+                gap:10px;
+            ">
+
+                <textarea class="instruction-text"
+                          placeholder="Mix ingredients..."></textarea>
+
+                <button class="remove-btn"
+                        onclick="this.closest('.instruction').remove(); updateJSON();">
+
+                    X
+
+                </button>
+
+            </div>
+
+        </div>
+    `;
+}
+
+function addIngredient() {
+
+    document.getElementById("ingredients")
+        .insertAdjacentHTML(
+            "beforeend",
+            ingredientTemplate()
+        );
+
+    attachListeners();
+
+    updateJSON();
+}
+
+function addInstruction() {
+
+    document.getElementById("instructions")
+        .insertAdjacentHTML(
+            "beforeend",
+            instructionTemplate()
+        );
+
+    attachListeners();
+
+    updateJSON();
+}
+
+function sanitizeRecipeID(text) {
+
+    return text
+
+        // lowercase
+        .toLowerCase()
+
+        // remove apostrophes completely
+        .replace(/'/g, "")
+
+        // replace non letters/numbers with spaces
+        .replace(/[^a-z0-9]+/g, " ")
+
+        // trim
+        .trim()
+
+        // spaces to hyphens
+        .replace(/\s+/g, "-")
+
+        // remove duplicate hyphens
+        .replace(/-+/g, "-");
+}
+
+function updateAutoID() {
+
+    if (idManuallyEdited) {
+        return;
+    }
+
+    const title =
+        document.getElementById("title").value;
+
+    document.getElementById("id").value =
+        sanitizeRecipeID(title);
+
+    updateJSON();
+}
+
+function showSuggestions(input) {
+
+    console.log("showSuggestions called");
+
+    console.log("Input element:", input);
+
+    const container =
+        input.parentElement.querySelector(
+            ".suggestions"
+        );
+
+    console.log("Suggestions container:", container);
+
+    if (!container) {
+
+        console.error(
+            "Suggestions container NOT FOUND"
+        );
+
+        return;
+    }
+
+    const value =
+        input.value
+            .trim()
+            .toLowerCase();
+
+    console.log("Typed value:", value);
+
+    container.innerHTML = "";
+
+    if (!value) {
+
+        console.log(
+            "Empty input, hiding suggestions"
+        );
+
+        container.style.display = "none";
+
+        return;
+    }
+
+    const matches =
+        measurementSuggestions.filter(x =>
+            x.toLowerCase().includes(value)
+        );
+
+    console.log("Matches:", matches);
+
+    if (matches.length === 0) {
+
+        console.log(
+            "No matches found"
+        );
+
+        container.style.display = "none";
+
+        return;
+    }
+
+    container.style.display = "block";
+
+    console.log(
+        "Showing suggestions container"
+    );
+
+    matches.slice(0, 8).forEach(match => {
+
+        console.log(
+            "Adding suggestion:",
+            match
+        );
+
+        const option =
+            document.createElement("div");
+
+        option.className = "suggestion";
+
+        option.textContent = match;
+
+        option.onclick = () => {
+
+            console.log(
+                "Clicked suggestion:",
+                match
+            );
+
+            input.value = match;
+
+            container.style.display = "none";
+
+            container.innerHTML = "";
+
+            updateJSON();
+        };
+
+        container.appendChild(option);
+    });
+
+    console.log(
+        "Final container HTML:",
+        container.innerHTML
+    );
+}
+
+function toggleCustomUnit(select) {
+
+    const customInput =
+        select.parentElement.querySelector(
+            ".custom-unit-input"
+        );
+
+    if (select.value === "__custom__") {
+
+        customInput.style.display = "block";
+
+    } else {
+
+        customInput.style.display = "none";
+    }
+
+    updateJSON();
+}
+
+function attachListeners() {
+
+    document.querySelectorAll(
+        "input, textarea, select"
+    ).forEach(el => {
+
+        el.oninput = updateJSON;
+        el.onchange = updateJSON;
+    });
+}
+
+function getIngredientData(el) {
+
+    const quantityInput =
+        el.querySelector(".ingredient-amount")
+            .value
+            .trim();
+
+    let quantity = null;
+
+    if (quantityInput !== "") {
+
+        quantity = parseFloat(quantityInput);
+
+        if (isNaN(quantity)) {
+            quantity = null;
+        }
+    }
+
+    const unit =
+        el.querySelector(".ingredient-type")
+            .value
+            .trim();
+
+    const item =
+        el.querySelector(".ingredient-item")
+            .value
+            .trim();
+
+    return {
+        item,
+        quantity,
+        unit
+    };
+}
+document.addEventListener("input", event => {
+
+    if (
+        event.target.classList.contains(
+            "ingredient-type"
+        )
+    ) {
+
+        console.log(
+            "Ingredient type input detected"
+        );
+
+        showSuggestions(event.target);
+    }
+});
+document.addEventListener("click", event => {
+
+    document.querySelectorAll(".suggestions")
+        .forEach(el => {
+
+            el.style.display = "none";
+        });
+
+    if (
+        event.target.classList.contains(
+            "ingredient-type"
+        )
+    ) {
+
+        showSuggestions(event.target);
+    }
+});
+
+function buildRecipeJSON() {
+
+    const ingredients = [
+        ...document.querySelectorAll(".ingredient")
+    ].map(getIngredientData);
+
+    const steps = [
+        ...document.querySelectorAll(".instruction-text")
+    ]
+    .map(el => el.value.trim())
+    .filter(Boolean);
+
+    return {
+
+        id:
+            document.getElementById("id")
+                .value
+                .trim(),
+
+        name:
+            document.getElementById("title")
+                .value
+                .trim(),
+
+        description:
+            document.getElementById("description")
+                .value
+                .trim(),
+
+        source:
+            document.getElementById("source")
+                ?.value
+                ?.trim() || "",
+
+        yield: {
+
+            amount:
+                Number(
+                    document.getElementById("yieldAmount")
+                        ?.value || 1
+                ),
+
+            unit:
+                document.getElementById("yieldUnit")
+                    ?.value
+                    ?.trim() || ""
+        },
+
+        ingredients,
+
+        steps,
+
+        tags:
+            document.getElementById("tags")
+                .value
+                .split(",")
+                .map(x => x.trim())
+                .filter(Boolean)
+    };
+}
+
+function updateJSON() {
+
+    const json =
+        JSON.stringify(
+            buildRecipeJSON(),
+            null,
+            2
+        );
+
+    document.getElementById("jsonPreview")
+        .textContent = json;
+}
+
+function downloadJSON() {
+
+    const data =
+        JSON.stringify(
+            buildRecipeJSON(),
+            null,
+            2
+        );
+
+    const blob =
+        new Blob(
+            [data],
+            { type: "application/json" }
+        );
+
+    const url =
+        URL.createObjectURL(blob);
+
+    const a =
+        document.createElement("a");
+
+    const id =
+        document.getElementById("id").value
+        || "recipe";
+
+    a.href = url;
+    a.download = `${id}.json`;
+
+    a.click();
+
+    URL.revokeObjectURL(url);
+}
+
+async function copyJSON() {
+
+    const data =
+        JSON.stringify(
+            buildRecipeJSON(),
+            null,
+            2
+        );
+
+    await navigator.clipboard.writeText(data);
+
+    alert("JSON copied");
+}
+
+addIngredient();
+addInstruction();
+
+attachListeners();
+
+updateJSON();
+
+</script>
+
+</body>
+</html>
