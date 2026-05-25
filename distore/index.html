@@ -82,12 +82,12 @@ small {
 
     try {
         const url =
-            `https://raw.githubusercontent.com/thunderstore-io/ecosystem-schema/master/games/data/${community}.yml`;
+            `https://thunderstore.io/c/${community}`;
 
         const res = await fetch(url);
 
         if (!res.ok) {
-            throw new Error("Community not found in ecosystem schema");
+            throw new Error("Community not found on thunderstore");
         }
 
         const text = await res.text();
@@ -95,23 +95,9 @@ small {
         let discord = null;
         let displayName = community;
 
-        for (const line of text.split(/\r?\n/)) {
-            const t = line.trim();
+        const regex = /nav-link"\s+href="(https:\/\/[^"]+)".+?discord/
 
-            if (t.startsWith("discordUrl:")) {
-                discord = t
-                    .replace("discordUrl:", "")
-                    .trim()
-                    .replace(/^["']|["']$/g, "");
-            }
-
-            if (t.startsWith("displayName:")) {
-                displayName = t
-                    .replace("displayName:", "")
-                    .trim()
-                    .replace(/^["']|["']$/g, "");
-            }
-        }
+        discord = text.match(regex)[1]
 
         if (!discord) {
             throw new Error("No discordUrl found in YAML");
