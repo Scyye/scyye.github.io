@@ -81,34 +81,18 @@ small {
     status.textContent = `Loading ${community}...`;
 
     try {
-        const url = `https://thunderstore.io/c/${community}`;
-    
-        // Use a CORS proxy
-        const proxy =
-            "https://corsproxy.io/?" + encodeURIComponent(url);
-    
-        const res = await fetch(proxy);
-    
-        if (!res.ok) {
-            throw new Error("Community not found on Thunderstore");
+        const res = await fetch(
+            `https://distore.scyyebiz.workers.dev/?community=${community}`
+        );
+
+        const data = await res.json();
+        
+        if (!data.success) {
+            throw new Error(data.error);
         }
-    
-        const text = await res.text();
-    
-        const regex =
-            /nav-link"\s+href="(https:\/\/[^"]+)".+?discord/i;
-    
-        const match = text.match(regex);
-    
-        if (!match) {
-            throw new Error("Discord link not found");
-        }
-    
-        const discord = match[1];
     
         status.textContent = `Redirecting to ${community}...`;
-    
-        window.location.replace(discord);
+        window.location.replace(data.discord);
     } catch (err) {
         console.error(err);
         status.textContent = err.message;
