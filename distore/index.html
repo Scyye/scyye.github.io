@@ -81,37 +81,34 @@ small {
     status.textContent = `Loading ${community}...`;
 
     try {
-        const url =
-            `https://thunderstore.io/c/${community}`;
-
-        const res = await fetch(url);
-
+        const url = `https://thunderstore.io/c/${community}`;
+    
+        // Use a CORS proxy
+        const proxy =
+            "https://corsproxy.io/?" + encodeURIComponent(url);
+    
+        const res = await fetch(proxy);
+    
         if (!res.ok) {
-            throw new Error("Community not found on thunderstore");
+            throw new Error("Community not found on Thunderstore");
         }
-
+    
         const text = await res.text();
-
-        let discord = null;
-        let displayName = community;
-
-        const regex = /nav-link"\s+href="(https:\/\/[^"]+)".+?discord/
-
-        discord = text.match(regex)[1]
-
-        if (!discord) {
-            throw new Error("No discordUrl found in YAML");
+    
+        const regex =
+            /nav-link"\s+href="(https:\/\/[^"]+)".+?discord/i;
+    
+        const match = text.match(regex);
+    
+        if (!match) {
+            throw new Error("Discord link not found");
         }
-
-        status.textContent = `Redirecting to ${displayName}...`;
-
-        // normalize + force absolute URL
-        const finalUrl = new URL(discord).href;
-
-        setTimeout(() => {
-            window.location.replace(finalUrl);
-        }, 300);
-
+    
+        const discord = match[1];
+    
+        status.textContent = `Redirecting to ${community}...`;
+    
+        window.location.replace(discord);
     } catch (err) {
         console.error(err);
         status.textContent = err.message;
